@@ -16,8 +16,8 @@
 
 """
 
-from CyrusGeom2D.vector_2d import Vector2D
-from CyrusGeom2D.angle_deg import AngleDeg
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.angle_deg import AngleDeg
 import math
 
 class Matrix2D:

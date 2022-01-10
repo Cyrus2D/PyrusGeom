@@ -2,13 +2,13 @@
   \ file circle_2d.py
   \ brief 2D circle region File.
 """
-from CyrusGeom2D.segment_2d import Segment2D
-from CyrusGeom2D.ray_2d import Ray2D
-from CyrusGeom2D.vector_2d import Vector2D
-from CyrusGeom2D.line_2d import Line2D
-from CyrusGeom2D.triangle_2d import Triangle2D
+from PyrusGeom.segment_2d import Segment2D
+from PyrusGeom.ray_2d import Ray2D
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.line_2d import Line2D
+from PyrusGeom.triangle_2d import Triangle2D
 import math
-from CyrusGeom2D.math_values import *
+from PyrusGeom.math_values import *
 
 
 """

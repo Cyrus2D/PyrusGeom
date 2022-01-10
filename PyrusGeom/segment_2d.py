@@ -3,12 +3,12 @@
   \ brief 2D segment line File.
 """
 
-from CyrusGeom2D.triangle_2d import Triangle2D
-from CyrusGeom2D.line_2d import Line2D
-from CyrusGeom2D.vector_2d import Vector2D
-from CyrusGeom2D.angle_deg import AngleDeg
+from PyrusGeom.triangle_2d import Triangle2D
+from PyrusGeom.line_2d import Line2D
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.angle_deg import AngleDeg
 import math
-from CyrusGeom2D.math_values import *
+from PyrusGeom.math_values import *
 
 
 class Segment2D:

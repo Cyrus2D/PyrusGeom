@@ -1,5 +1,5 @@
 import math
-from CyrusGeom2D.math_values import *
+from PyrusGeom.math_values import *
 
 
 class AngleDeg:
@@ -63,6 +63,11 @@ class AngleDeg:
         else:
             self._degree = 180 + self._degree
         return self._degree
+
+    def get_reverse(self):
+        angle = AngleDeg(self.degree())
+        angle.reverse()
+        return angle
 
     def __iadd__(self, other):
         if type(other) == AngleDeg:
@@ -140,6 +145,9 @@ class AngleDeg:
 
     def copy(self):
         return AngleDeg(self._degree)
+
+    def get_normalized(self):
+        return (self.degree() + 180) / 360
 
     @staticmethod
     def rad2deg(rad):

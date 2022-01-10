@@ -5,9 +5,9 @@
 
 """
 
-from CyrusGeom2D.line_2d import Line2D
-from CyrusGeom2D.vector_2d import Vector2D
-from CyrusGeom2D.angle_deg import AngleDeg
+from PyrusGeom.line_2d import Line2D
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.angle_deg import AngleDeg
 
 
 class Ray2D:

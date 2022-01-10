@@ -4,7 +4,7 @@
 
 """
 
-from CyrusGeom2D.vector_2d import Vector2D
+from PyrusGeom.vector_2d import Vector2D
 
 
 class Region2D:

@@ -2,4 +2,5 @@
 /build
 .idea
 dist
-CyrusGeom2D.egg-info
+PyrusGeom.egg-info
+.eggs

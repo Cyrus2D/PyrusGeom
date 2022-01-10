@@ -3,10 +3,10 @@
   \ brief 2D sector region File.
 """
 
-from CyrusGeom2D.region_2d import Region2D
-from CyrusGeom2D.vector_2d import Vector2D
-from CyrusGeom2D.angle_deg import AngleDeg
-from CyrusGeom2D.math_values import *
+from PyrusGeom.region_2d import Region2D
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.angle_deg import AngleDeg
+from PyrusGeom.math_values import *
 
 
 class Sector2D(Region2D):

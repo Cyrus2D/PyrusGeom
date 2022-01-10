@@ -5,10 +5,10 @@
     Line Formula: aX + bY + c = 0
 """
 
-from CyrusGeom2D.vector_2d import Vector2D
-from CyrusGeom2D.angle_deg import AngleDeg
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.angle_deg import AngleDeg
 import math
-from CyrusGeom2D.math_values import *
+from PyrusGeom.math_values import *
 
 
 class Line2D:

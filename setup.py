@@ -1,11 +1,11 @@
 from setuptools import setup
 
 setup(
-   name='CyrusGeom2D',
+   name='PyrusGeom',
    version='0.0.1',
    author='Cyrus 2D Team',
    author_email='nader.zare88@gmail.com',
-   packages=['CyrusGeom2D', 'CyrusGeom2DTest'],
+   packages=['PyrusGeom', 'PyrusGeomTest'],
    # scripts=['bin/script1','bin/script2'],
    # url='http://pypi.python.org/pypi/PackageName/',
    license='LICENSE',
@@ -14,7 +14,5 @@ setup(
    install_requires=[
    ],
    python_requires=">=3.6",
-   test_suite='CyrusGeom2DTest',
-   tests_require=['pytest']
-
+   test_suite='PyrusGeomTest',
 )

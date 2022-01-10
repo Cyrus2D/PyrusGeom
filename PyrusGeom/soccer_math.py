@@ -3,7 +3,7 @@
   \ brief math utility depending on RCSSServer2D
 
 """
-from CyrusGeom2D.geom_2d import *
+from PyrusGeom.geom_2d import *
 
 EPS = 1.0e-8
 

@@ -4,12 +4,12 @@
 """
 
 # from segment_2d import Segment2D
-from CyrusGeom2D.region_2d import Region2D
-from CyrusGeom2D.ray_2d import Ray2D
-from CyrusGeom2D.vector_2d import Vector2D
-from CyrusGeom2D.angle_deg import AngleDeg
-from CyrusGeom2D.line_2d import Line2D
-from CyrusGeom2D.math_values import *
+from PyrusGeom.region_2d import Region2D
+from PyrusGeom.ray_2d import Ray2D
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.angle_deg import AngleDeg
+from PyrusGeom.line_2d import Line2D
+from PyrusGeom.math_values import *
 import math
 
 

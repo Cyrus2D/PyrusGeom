@@ -3,13 +3,13 @@
   \ brief 2D polygon region File.
 """
 
-from CyrusGeom2D.rect_2d import Rect2D
-from CyrusGeom2D.region_2d import Region2D
-from CyrusGeom2D.vector_2d import Vector2D
-from CyrusGeom2D.angle_deg import AngleDeg
-from CyrusGeom2D.size_2d import Size2D
-from CyrusGeom2D.line_2d import Line2D
-from CyrusGeom2D.segment_2d import Segment2D
+from PyrusGeom.rect_2d import Rect2D
+from PyrusGeom.region_2d import Region2D
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.angle_deg import AngleDeg
+from PyrusGeom.size_2d import Size2D
+from PyrusGeom.line_2d import Line2D
+from PyrusGeom.segment_2d import Segment2D
 import math
 
 
