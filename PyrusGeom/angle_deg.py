@@ -218,7 +218,7 @@ class AngleDeg:
             return AngleDeg.rad2deg(math.atan2(y, x))
 
     @staticmethod
-    def bisect(left: float, right: float) -> Union[AngleDeg, float]:
+    def bisect(left: Union[int, float, AngleDeg], right: Union[int, float, AngleDeg]) -> Union[AngleDeg, float]:
         result = AngleDeg(left)
         rel = AngleDeg(right - left)
         diff = result.degree() - AngleDeg(right).degree()

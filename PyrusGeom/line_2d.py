@@ -52,6 +52,11 @@ class Line2D:
                 self._b = args[1].x() - args[0].x()
                 self._c = -self._a * args[0].x() - self._b * args[0].y()
                 self._is_valid = True
+        elif len(args) == 1:
+            if isinstance(args[0], Line2D):
+                self._a = args[0].a()
+                self._b = args[0].b()
+                self._c = args[0].c()
         if not self._is_valid:
             raise Exception('The input should be (2 vector2d) or (3 float) or (vector 2d and angle)')
 
@@ -126,7 +131,7 @@ class Line2D:
         """
         return math.fabs(self._a * other.b() - other.a() * self._b) < EPSILON
 
-    def intersection(self, other: Union[Line2D]):
+    def intersection(self, other: Union[Line2D]) -> Vector2D:
         """
         brief get the intersection point with 'other'
         param other considered line
@@ -177,19 +182,20 @@ class Line2D:
         return Line2D(origin, AngleDeg.bisect(left, right))
 
     @staticmethod
-    def perpendicular_bisector(point1, point2) -> Line2D:
+    def perpendicular_bisector(point1: Vector2D, point2: Vector2D) -> Line2D:
         """
         brief make perpendicular bisector line from twt points
         param point1 1st point
         param point2 2nd point
         return line object
         """
-        if math.fabs(point2.x - point1.x) < EPSILON and math.fabs(point2.y - point1.y) < EPSILON:
+        if math.fabs(point2.x() - point1.x()) < EPSILON and math.fabs(point2.y() - point1.y()) < EPSILON:
             print("Error : points have same coordinate values")
-            tmp_vec = Vector2D(point1.x + 1, point2.y)
+            tmp_vec = Vector2D(point1.x() + 1, point2.y())
             return Line2D(point1, tmp_vec)
-        tmp = (point2.x * point2.x - point1.x * point1.x + point2.y * point2.y - point1.y * point1.y) * -0.5
-        return Line2D(point2.x - point1.x, point2.y - point1.y, tmp)
+        tmp = (point2.x() * point2.x() - point1.x() * point1.x()
+               + point2.y() * point2.y() - point1.y() * point1.y()) * -0.5
+        return Line2D(point2.x() - point1.x(), point2.y() - point1.y(), tmp)
 
     def __repr__(self):
         """
@@ -200,12 +206,3 @@ class Line2D:
         if self._c == 0:
             return "({} X + {} Y = 0)".format(self._a, self._b)
         return "({} X + {} Y + {} = 0)".format(self._a, self._b, self._c)
-
-
-def test():
-    a = Line2D(Vector2D(1,1), Vector2D(2,2))
-    print(a)
-
-
-if __name__ == "__main__":
-    test()

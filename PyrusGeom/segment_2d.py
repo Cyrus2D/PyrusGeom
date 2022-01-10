@@ -118,6 +118,9 @@ class Segment2D:
         self._terminal = tmp
         return self
 
+    def copy(self) -> Segment2D:
+        return Segment2D(self.origin(), self.terminal())
+
     def reverse(self) -> Segment2D:
         """
         brief swap segment edge point. This method is equivalent to swap(), for convenience.
@@ -144,9 +147,8 @@ class Segment2D:
         brief check if the point is within the rectangle defined by self segment as a diagonal line.
         return True if rectangle contains p
         """
-        return ((p.x() - self._origin.x()) * (p.x() - self._terminal.x()) <= CALC_ERROR and (
-                p.y() - self._origin.y()) * (
-                        p.y() - self._origin.y()) <= CALC_ERROR)
+        return ((p.x() - self._origin.x()) * (p.x() - self._terminal.x()) <= CALC_ERROR and
+                (p.y() - self._origin.y()) * (p.y() - self._origin.y()) <= CALC_ERROR)
 
     def equals(self, other: Segment2D) -> bool:
         """
@@ -187,7 +189,7 @@ class Segment2D:
 
         return Vector2D.invalid()
 
-    def intersection(self, *args):
+    def intersection(self, *args) -> Vector2D:
         """
         LEN = 1
         brief check & get the intersection point with other line
@@ -261,7 +263,7 @@ class Segment2D:
             a1 = line.a() * self._terminal.x() + line.b() * self._terminal.y() + line.c()
             return a0 * a1 <= 0.0
 
-    def check_intersects_on_line(self, p: Vector2D):
+    def check_intersects_on_line(self, p: Vector2D) -> bool:
         """
         brief check is that point Intersects On Line
         param p Vector2D for that point
@@ -372,8 +374,8 @@ class Segment2D:
         param p checked point
         return True if point is on self segment
         """
-        return Triangle2D.double_signed_area(self._origin, self._terminal,
-                                             p) == 0.0 and self.check_intersects_on_line(p)
+        return Triangle2D.double_signed_area(self._origin, self._terminal, p) == 0.0 \
+               and self.check_intersects_on_line(p)
 
     def on_segment_weakly(self, p: Vector2D) -> bool:
         """

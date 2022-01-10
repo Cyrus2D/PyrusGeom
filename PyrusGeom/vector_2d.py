@@ -349,7 +349,7 @@ class Vector2D:
         param other compared vector.
         return true if weakly same, otherwise false.
         """
-        return math.fabs(self._x - other.x) < EPSILON and math.fabs(self._y - other.y) < EPSILON
+        return math.fabs(self._x - other.x()) < EPSILON and math.fabs(self._y - other.y()) < EPSILON
 
     def rotate(self, deg: Union[int, float, AngleDeg]):
         """
