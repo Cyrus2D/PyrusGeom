@@ -229,10 +229,10 @@ class Triangle2D(Region2D):
         elif ray is not None:
             n_sol = Triangle2D.intersection(line=ray.line())
 
-            if n_sol[0] > 1 and not ray.inRightDir(n_sol[1], 1.0):
+            if n_sol[0] > 1 and not ray.in_right_dir(n_sol[1], 1.0):
                 n_sol[0] -= 1
 
-            if n_sol[0] > 0 and not ray.inRightDir(n_sol[1], 1.0):
+            if n_sol[0] > 0 and not ray.in_right_dir(n_sol[1], 1.0):
                 n_sol[1] = n_sol[2]
                 n_sol[0] -= 1
 

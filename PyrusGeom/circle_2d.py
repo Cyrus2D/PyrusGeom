@@ -160,7 +160,7 @@ class Circle2D:
             y1 = n_sol[1]
             y2 = n_sol[2]
             if n_sol[0] > 0:
-                sol_list = [n_sol[0], Vector2D(line.getX(y1), y1), Vector2D(line.getX(y2), y2)]
+                sol_list = [n_sol[0], Vector2D(line.get_x(y1), y1), Vector2D(line.get_x(y2), y2)]
             else:
                 sol_list = [n_sol[0], Vector2D(), Vector2D()]
 
@@ -169,10 +169,10 @@ class Circle2D:
             line_tmp = Line2D(origin=ray.origin(), angle=ray.dir())
 
             sol_list = self.intersection(line=line_tmp)
-            if sol_list[0] > 1 and not ray.inRightDir(sol_list[2], 1.0):
+            if sol_list[0] > 1 and not ray.in_right_dir(sol_list[2], 1.0):
                 sol_list[0] -= 1
 
-            if sol_list[0] > 0 and not ray.inRightDir(sol_list[1], 1.0):
+            if sol_list[0] > 0 and not ray.in_right_dir(sol_list[1], 1.0):
                 sol_list[1] = sol_list[2]
                 sol_list[0] -= 1
 

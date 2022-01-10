@@ -20,6 +20,7 @@ from PyrusGeom.vector_2d import Vector2D
 from PyrusGeom.angle_deg import AngleDeg
 import math
 
+
 class Matrix2D:
     """
       \ brief create a matrix with all elements OR create an identity matrix

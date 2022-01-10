@@ -389,7 +389,7 @@ class Rect2D(Region2D):
     """
 
     def isValid(self):
-        return self._size.isValid()
+        return self._size.is_valid()
 
     """
       \ brief get the area value of self rectangle.
@@ -628,10 +628,10 @@ class Rect2D(Region2D):
         elif ray is not None:
             n_sol = self.intersection(line=ray.line())
 
-            if n_sol[0] > 1 and not ray.inRightDir(n_sol[2], 1.0):
+            if n_sol[0] > 1 and not ray.in_right_dir(n_sol[2], 1.0):
                 n_sol[0] -= 1
 
-            if n_sol[0] > 0 and not ray.inRightDir(n_sol[1], 1.0):
+            if n_sol[0] > 0 and not ray.in_right_dir(n_sol[1], 1.0):
                 n_sol[1] = n_sol[2]
                 n_sol[0] -= 1
 

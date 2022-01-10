@@ -11,6 +11,7 @@ from PyrusGeom.polygon_2d import Polygon2D
 from PyrusGeom.vector_2d import Vector2D
 from PyrusGeom.segment_2d import Segment2D
 from PyrusGeom.math_values import *
+import math
 
 
 """

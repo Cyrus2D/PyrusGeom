@@ -119,8 +119,8 @@ class Sector2D(Region2D):
     def contains(self, point: Vector2D):
         rel = point - self.center
         d2 = rel.r2()
-        return (self.min_r * self.min_r <= d2 <= self.max_r * self.max_r and rel.th().isWithin(self.start,
-                                                                                               self.end))
+        return (self.min_r * self.min_r <= d2 <= self.max_r * self.max_r and rel.th().is_within(self.start,
+                                                                                                self.end))
 
     """
          \ brief get smaller side circumference

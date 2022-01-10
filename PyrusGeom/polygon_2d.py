@@ -174,13 +174,13 @@ class Polygon2D(Region2D):
             p1 = self._vertices[p1_index]
 
             if not allow_on_segment:
-                if Segment2D(p0, p1).onSegment(p):
+                if Segment2D(p0, p1).on_segment(p):
                     return False
 
             if allow_on_segment and p == p0:
                 return True
 
-            if line.existIntersection(segment=Segment2D(p0, p1)):
+            if line.exist_intersection(segment=Segment2D(p0, p1)):
                 if p0.y() == p.y() or p1.y() == p.y():
                     if p0.y() == p.y():
                         if p0.x() < min_line_x:
