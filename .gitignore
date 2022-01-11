@@ -4,3 +4,11 @@
 dist
 PyrusGeom.egg-info
 .eggs
+/env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Settings
+.vscode/settings.json
