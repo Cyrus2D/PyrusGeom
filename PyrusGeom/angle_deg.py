@@ -34,7 +34,6 @@ class AngleDeg:
             raise Exception('The input should be an AngleDeg or a Degree')
         self.normal()
 
-
     def degree(self) -> float:
         """get the degree in a new AngleDeg
 
@@ -213,8 +212,6 @@ class AngleDeg:
         diff = self.degree() - angle.degree()
         return (0.0 <= diff < 180.0) or diff < -180.0
 
-
-
     def __iadd__(self, other: Union[AngleDeg, float, int]) -> AngleDeg:
         """operator +=
 
@@ -353,18 +350,17 @@ class AngleDeg:
         new_angle_deg = AngleDeg(-self._degree)
         return new_angle_deg
 
-    def __eq__(self, other:Union[AngleDeg,float, int]) -> bool:
+    def __eq__(self, other: Union[AngleDeg, float, int]) -> bool:
         """operator == for AngleDeg
 
         Args:
             other (Union[AngleDeg,float, int]): right hand side argument
         Returns:
-            bool: true if equal or diffrence is less than EPSILON. else false
+            bool: true if equal or difference is less than EPSILON. else false
         """
         if isinstance(other, AngleDeg):
             other = other.degree()
         return math.fabs(self._degree - other) < EPSILON
-        
 
     def cos(self) -> float:
         """calculate cosine
@@ -395,7 +391,7 @@ class AngleDeg:
         """static utility. convert radian to degree
 
         Args:
-            deg (float): radian value
+            rad (float): radian value
 
         Returns:
             float: degree value
@@ -455,7 +451,7 @@ class AngleDeg:
         """static utility. calculate arc cosine value
 
         Args:
-            sine (float): cosine value
+            cosine (float): cosine value
 
         Returns:
             float: arc cosine value, that is degree type.
@@ -513,8 +509,7 @@ class AngleDeg:
             return AngleDeg.rad2deg(math.atan2(y, x))
 
     @staticmethod
-    def bisect(left: Union[int, float, AngleDeg], 
-    right: Union[int, float, AngleDeg]) -> Union[AngleDeg, float]:
+    def bisect(left: Union[int, float, AngleDeg], right: Union[int, float, AngleDeg]) -> Union[AngleDeg, float]:
         """static utility that returns bisect angle of [left, right]
         this method can take obtuse angle
 
