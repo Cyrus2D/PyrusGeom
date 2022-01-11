@@ -9,9 +9,16 @@ class Vector2D:
     def __init__(self, *args) -> None:
         """
         brief default constructor : create Vector with XY value directly.
-        param x and y assigned x and y values
-        param vector 2d assigned x and y values
-        if no params is passed, x and y will be 0
+        Args:
+            param1: number for x
+            param2: number for y
+            or
+            param1: Vector2D
+            or
+            no param
+            if no params is passed, x and y will be 0
+        Raises:
+            The input should be a Vector2D or two numbers or no input
         """
         self._is_valid = True
         if len(args) == 0:
@@ -28,45 +35,62 @@ class Vector2D:
 
     def x(self) -> float:
         """
-        brief accessor
-        :return X coordinate
+        brief accessor to x
+        Returns:
+             X coordinate
         """
         return self._x
 
     def y(self) -> float:
         """
         brief accessor
-        :return X coordinate
+        Returns:
+             Y coordinate
         """
         return self._y
 
     def get_x(self) -> float:
         """
-        brief accessor
-        return X coordinate
+        brief accessor to x
+        Returns:
+             X coordinate
         """
         return self._x
 
     def get_y(self) -> float:
         """
-        brief accessor
-        return Y coordinate
+        brief accessor to y
+        Returns:
+             Y coordinate
         """
         return self._y
 
     def copy(self) -> Vector2D:
         """
-        returns copy of this Vector2D
-        @return X coordinate
+        brief returns copy of this Vector2D
+
+        Returns:
+            Copy of this Vector 2D
         """
         return Vector2D(self._x, self._y)
+
+    def get_copy(self):
+        """
+        brief returns copy of this Vector2D
+
+        Returns:
+            Copy of this Vector 2D
+        """
+        return self.copy()
 
     def assign(self, x: float, y: float) -> Vector2D:
         """
         brief assign XY value directly.
-        :param x assigned x value
-        :param y assigned y value
-        :return reference to itself
+        Args:
+            x: assigned x value
+            y: assigned y value
+        Return:
+             reference to itself
         """
         self._x = x
         self._y = y
@@ -74,31 +98,35 @@ class Vector2D:
 
     def set_x(self, x: Union[int, float]) -> None:
         """
-        set x of the object to new x
-        @param x
+        brief set x of the object to new x.
+        Args:
+            x: assigned x value
         """
         self._x = x
 
     def set_y(self, y: Union[int, float]) -> None:
         """
-        set y of the object to new y
-        @param y
+        brief set y of the object to new y.
+        Args:
+            y: assigned y value
         """
         self._y = y
 
     def set_x_y(self, x: Union[int, float], y: Union[int, float]) -> None:
         """
-        set x and y of the object to object
-        @param x:
-        @param y:
+        brief set x and y of the object to new x and y.
+        Args:
+            x: assigned x value
+            y: assigned y value
         """
         self._x = x
         self._y = y
 
     def set_vector(self, other: Vector2D) -> None:
         """
-        set x and y of the object to x and y of another object
-        @param other: another vector2d
+        brief set x and y of the object to the x and y of the new object.
+        Args:
+            other: A vector 2D
         """
         self._x = other.x()
         self._y = other.y()
@@ -107,8 +135,9 @@ class Vector2D:
     def set_polar(self, radius: Union[int, float], angle: Union[int, float, AngleDeg]) -> None:
         """
         brief assign XY value from POLAR value.
-        @param radius: vector's radius
-        @param angle: vector's angle
+        Args:
+            radius: vector's radius
+            angle: vector's angle
         """
         if not isinstance(angle, AngleDeg):
             angle = AngleDeg(angle)
@@ -124,89 +153,96 @@ class Vector2D:
     def invalidate(self) -> None:
         """
         brief invalidate this object
-        @rtype: object
         """
         self._is_valid = False
 
     def is_valid(self) -> bool:
         """
         brief check is the object valid
-        @return: is_valid
+
+        Return:
+            is_valid
         """
         return self._is_valid
 
     def r2(self) -> float:
         """
         brief get the squared length of vector.
-        @return: squared length value
+        Return:
+            squared length value
         """
         return self._x * self._x + self._y * self._y
 
     def r(self) -> float:
         """
         brief get the length of vector.
-        @return: length value
+        Return:
+            length value
         """
         return math.sqrt(self.r2())
 
     def length(self) -> float:
         """
         brief get the length of vector. this method is equivalent to r().
-        @return: length value
+        Return:
+            length value
         """
         return self.r()
 
     def length2(self):
         """
         brief get the squared length of vector. this method is equivalent to r2().
-        @return: squared length value
+        Return:
+             squared length value
         """
         return self.r2()
 
     def th(self) -> AngleDeg:
         """
         brief get the angle of vector.
-        @return: angle
+        Return:
+            angle
         """
         return AngleDeg(AngleDeg.atan2_deg(self._y, self._x))
 
     def dir(self) -> AngleDeg:
         """
         brief get the angle of vector. this method is equivalent to th().
-        @return: angle
+        Return:
+             angle
         """
         return self.th()
-
-    """
-      
-      return 
-    """
 
     def abs(self) -> Vector2D:
         """
         brief get new vector that XY values were set to absolute value.
-        @return: new vector that all values are absolute.
+        Return:
+            new vector that all values are absolute.
         """
         return Vector2D(abs(self._x), abs(self._y))
 
     def abs_x(self) -> float:
         """
         brief get absolute x value
-        @return: absolute x value
+        Return:
+            absolute x value
         """
         return math.fabs(self._x)
 
     def abs_y(self):
         """
         brief get absolute y value
-        @return: absolute y value
+        Return:
+            absolute y value
         """
         return math.fabs(self._y)
 
     def add(self, *args) -> None:
         """
         added x and y to the vector 2d
-        @param args: (x, y) or another vector 2d
+
+        Args:
+            args: (x, y) or another vector 2d
         """
         if len(args) == 1:
             self._x += args[0].x()
@@ -222,6 +258,12 @@ class Vector2D:
         self._y += y
 
     def sub(self, *args) -> None:
+        """
+        sub x and y from the vector 2d
+
+        Args:
+            args: (x, y) or another vector 2d
+        """
         if len(args) == 1:
             self._x -= args[0].x()
             self._y -= args[0].y()
@@ -238,27 +280,31 @@ class Vector2D:
     def scale(self, scalar: Union[int, float]) -> None:
         """
         brief scale this vector
-        @param scalar: scaling factor
+
+        Args:
+            scalar: scaling factor
         """
         self._x *= scalar
         self._y *= scalar
 
-    def get_copy(self):
-        return self.copy()
-
     def dist2(self, other: Vector2D) -> float:
         """
         brief get the squared distance from this to 'other'.
-        @param other: target point
-        @return: squared distance to 'other'
+
+        Args:
+            other: target point
+        Return:
+            squared distance to 'other'
         """
         return math.pow(self._x - other.x(), 2) + math.pow(self._y - other.y(), 2)
 
     def dist(self, other: Vector2D) -> float:
         """
         brief get the distance from this to 'p'.
-        @param other: target point
-        @return: distance to 'p'
+        Args:
+             other: target point
+        Return:
+            distance to 'p'
         """
         return math.sqrt(self.dist2(other))
 
@@ -273,7 +319,8 @@ class Vector2D:
     def reverse_vector(self) -> Vector2D:
         """
         brief get reversed vector.
-        @return: new vector object
+        Return:
+             new vector object
         """
         new_vector = Vector2D(self._x, self._y)
         new_vector.reverse()
@@ -281,8 +328,9 @@ class Vector2D:
 
     def set_length(self, length: Union[int, float]) -> None:
         """
-      brief set vector length to 'length'.
-        @param length: new length to be set
+        brief set vector length to 'length'.
+        Args:
+             length: new length to be set
         """
         mag = self.r()
         if mag > EPSILON:
@@ -307,7 +355,8 @@ class Vector2D:
     def normalize_vector(self) -> Vector2D:
         """
         brief get new normalized vector that the length is set to 1.0 with the same angle as self
-        @return: new normalized vector
+        Return:
+             new normalized vector
         """
         new_vector = Vector2D(self._x, self._y)
         new_vector.set_length(1)
@@ -316,29 +365,35 @@ class Vector2D:
     def inner_product(self, v: Vector2D) -> float:
         """
         brief get inner(dot) product with 'v'.
-        @param v: target vector
-        @return: value of inner product
+        # ==  |this| * |v| * (*this - v).th().cos()
+        Args:
+             v: target vector
+        Return:
+             value of inner product
         """
         return self._x * v.x() + self._y * v.y()
-        # ==  |this| * |v| * (*this - v).th().cos()
 
     def outer_product(self, v: Vector2D) -> float:
         """
         brief get virtual outer(cross) product with 'v'.
-        @param v: target vector
-        @return: value of outer product
-        """
         #   xn = self.y * v.z - self.z * v.y;
         #   yn = self.z * v.x - self.x * v.z;
         #   zn = self.x * v.y - self.y * v.x;
-        return self._x * v._y - self._y * v._x
         # == |this| * |v| * (*this - v).th().sin()
+        Args:
+             v: target vector
+        Return:
+            value of outer product
+        """
+        return self._x * v._y - self._y * v._x
 
     def equals(self, other: Vector2D) -> bool:
         """
         brief check if this vector is strictly same as given vector.
-        param other compared vector
-        return true if strictly same, otherwise false.
+        Args:
+             other: compared vector
+        Return:
+             true if strictly same, otherwise false.
         """
 
         return self._x == other.x() and self._y == other.y()
@@ -346,15 +401,18 @@ class Vector2D:
     def equals_weakly(self, other: Vector2D) -> bool:
         """
         brief check if this vector is weakly same as given vector.
-        param other compared vector.
-        return true if weakly same, otherwise false.
+        Args:
+             other: compared vector.
+        Return:
+             true if weakly same, otherwise false.
         """
         return math.fabs(self._x - other.x()) < EPSILON and math.fabs(self._y - other.y()) < EPSILON
 
     def rotate(self, deg: Union[int, float, AngleDeg]):
         """
         brief rotate this vector with 'deg'
-        param deg rotated angle by double type
+        Args:
+             deg: rotated angle by double type
         """
         if isinstance(deg, AngleDeg):
             self.rotate(deg.degree())
@@ -366,8 +424,10 @@ class Vector2D:
     def rotated_vector(self, deg: Union[int, float, AngleDeg]) -> Vector2D:
         """
         brief get new vector that is rotated by 'deg'.
-        param deg rotated angle. double type.
-        return new vector rotated by 'deg'
+        Args:
+             deg: rotated angle. double type.
+        Return:
+             new vector rotated by 'deg'
         """
         new_vector = Vector2D(self._x, self._y)
         return new_vector.rotate(deg)
@@ -375,8 +435,10 @@ class Vector2D:
     def set_dir(self, direction: Union[int, float, AngleDeg]) -> None:
         """
         brief set vector's angle to 'angle'
-        param direction new angle to be set
-        return reference to itself
+        Args:
+             direction: new angle to be set
+        Return:
+             reference to itself
         """
         if not isinstance(direction, AngleDeg):
             direction = AngleDeg(direction)
@@ -425,7 +487,8 @@ class Vector2D:
     def invalid() -> Vector2D:
         """
         brief make an invalid vector2D
-        return invalid vector2D
+        Return:
+             invalid vector2D
         """
         vec_invalid = Vector2D()
         vec_invalid.invalidate()
@@ -435,9 +498,11 @@ class Vector2D:
     def from_polar(mag: Union[int, float], theta: Union[int, float, AngleDeg]) -> Vector2D:
         """
         brief get new Vector created by POLAR value.
-        param mag length of vector
-        param theta angle of vector
-        return new vector object
+        Args:
+            mag: length of vector
+            theta: angle of vector
+        Return:
+             new vector object
         """
         if not isinstance(theta, AngleDeg):
             theta = AngleDeg(theta)
@@ -447,9 +512,11 @@ class Vector2D:
     def polar2vector(r: Union[int, float], d: Union[int, float, AngleDeg]) -> Vector2D:
         """
         brief get new Vector created by POLAR value.
-        param mag length of vector
-        param theta angle of vector
-        return new vector object
+        Args:
+            r: length of vector
+            d: angle of vector
+        Return:
+             new vector object
         """
         return Vector2D.from_polar(r, d)
 
@@ -457,9 +524,10 @@ class Vector2D:
     def inner_product_static(v1: Vector2D, v2: Vector2D) -> float:
         """
         brief get inner(dot) product for v1 and v2.
-        param v1 input 1
-        param v2 input 2
-        return value of inner product
+        Args:
+            v1: input 1
+            v2: input 2
+        Return: value of inner product
         """
         return v1.inner_product(v2)
 
@@ -467,8 +535,10 @@ class Vector2D:
     def outer_product_static(v1: Vector2D, v2: Vector2D) -> float:
         """
         brief get outer(cross) product for v1 and v2.
-        param v1 input 1
-        param v2 input 2
-        return value of outer product
+        Args:
+            v1: input 1
+            v2: input 2
+        Return:
+             value of outer product
         """
         return v1.outer_product(v2)
