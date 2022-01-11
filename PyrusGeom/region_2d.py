@@ -15,14 +15,14 @@ class Region2D:
     def area(self):
         """
         brief get the area of this region
-        return value of the area
+        @return value of the area
         """
         pass
 
     def contains(self, point: Vector2D):
         """
         brief check if this region contains 'point'.
-        param point considered point
-        return true or false
+        @param point considered point
+        @return true or false
         """
         pass

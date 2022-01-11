@@ -36,7 +36,6 @@ class TestRay2D(TestCase):
         b = Vector2D(10, 10)
         r = Ray2D(a, b)
         l = r.line()
-        print(l)
         self.assertTrue(abs(l.b() + l.a()) < 0.1)
         self.assertEqual(l.c(), 0)
 

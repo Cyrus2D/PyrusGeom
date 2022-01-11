@@ -2,7 +2,7 @@
   \ file polygon_2d.py
   \ brief 2D polygon region File.
 """
-
+from __future__ import annotations
 from PyrusGeom.rect_2d import Rect2D
 from PyrusGeom.region_2d import Region2D
 from PyrusGeom.vector_2d import Vector2D

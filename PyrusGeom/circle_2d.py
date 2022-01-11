@@ -92,7 +92,7 @@ class Circle2D:
         """
         return self._radius
 
-    def intersection(self, other: Union[Line2D, Ray2D, Segment2D, Circle2D]) -> list[Union[int, Vector2D]]:
+    def intersection(self, other: Union[Line2D, Ray2D, Segment2D, Circle2D]) -> list[Vector2D]:
         """
         brief calculate the intersection with straight line
         @param other considered line or ray or segment or circle
@@ -101,7 +101,7 @@ class Circle2D:
         if isinstance(other, Line2D):
             if math.fabs(other.a()) < EPSILON:
                 if math.fabs(other.b()) < EPSILON:
-                    return [0, Vector2D(), Vector2D()]
+                    return []
 
                 n_sol = quadratic_f(1.0,
                                     -2.0 * self._center.x(),
@@ -112,9 +112,11 @@ class Circle2D:
                 x2 = n_sol[2]
                 if n_sol[0] > 0:
                     y1 = -other.c() / other.b()
-                    sol_list = [n_sol[0], Vector2D(x1, y1), Vector2D(x2, y1)]
+                    sol_list = [Vector2D(x1, y1), Vector2D(x2, y1)]
+                    if x1 == x2:
+                        del sol_list[1]
                 else:
-                    sol_list = [n_sol[0], Vector2D(), Vector2D()]
+                    sol_list = []
                 return sol_list
 
             else:
@@ -129,31 +131,33 @@ class Circle2D:
             y1 = n_sol[1]
             y2 = n_sol[2]
             if n_sol[0] > 0:
-                sol_list = [n_sol[0], Vector2D(other.get_x(y1), y1), Vector2D(other.get_x(y2), y2)]
+                sol_list = [Vector2D(other.get_x(y1), y1), Vector2D(other.get_x(y2), y2)]
+                if sol_list[0].equals_weakly(sol_list[1]):
+                    del sol_list[1]
             else:
-                sol_list = [n_sol[0], Vector2D(), Vector2D()]
+                sol_list = []
 
             return sol_list
         elif isinstance(other, Ray2D):
             line_tmp = Line2D(other.origin(), other.dir())
             sol_list = self.intersection(line_tmp)
-            if sol_list[0] > 1 and not other.in_right_dir(sol_list[2], 1.0):
-                sol_list[0] -= 1
+            if len(sol_list) > 1 and not other.in_right_dir(sol_list[1], 1.0):
+                del sol_list[1]
 
-            if sol_list[0] > 0 and not other.in_right_dir(sol_list[1], 1.0):
-                sol_list[1] = sol_list[2]
-                sol_list[0] -= 1
+            if len(sol_list) > 0 and not other.in_right_dir(sol_list[0], 1.0):
+                sol_list[0] = sol_list[1]
+                del sol_list[1]
 
             return sol_list
 
         elif isinstance(other, Segment2D):
             line = other.line()
             sol_list = self.intersection(line)
-            if sol_list[0] > 1 and not other.contains(sol_list[1]):
-                sol_list[0] -= 1
+            if len(sol_list) > 1 and not other.contains(sol_list[1]):
+                del sol_list[1]
 
-            if sol_list[0] > 0 and not other.contains(sol_list[2]):
-                sol_list[0] -= 1
+            if len(sol_list) > 0 and not other.contains(sol_list[0]):
+                del sol_list[0]
 
             return sol_list
         elif isinstance(other, Circle2D):
@@ -162,16 +166,28 @@ class Circle2D:
             center_dist2 = rel_x * rel_x + rel_y * rel_y
             center_dist = math.sqrt(center_dist2)
             if center_dist < math.fabs(self._radius - other.radius()) or self._radius + other.radius() < center_dist:
-                return [0, Vector2D(), Vector2D()]
+                return []
 
             line = Line2D(-2.0 * rel_x, -2.0 * rel_y,
                           other.center().r2() - other.radius() * other.radius()
                           - self._center.r2() + self._radius * self._radius)
+            sol_list = self.intersection(line)
+            return sol_list
 
-            return self.intersection(line)
+    def intersection_with_line(self, line: Line2D) -> list[Vector2D]:
+        return self.intersection(line)
+
+    def intersection_with_ray(self, ray: Ray2D) -> list[Vector2D]:
+        return self.intersection(ray)
+
+    def intersection_with_segment(self, segment: Segment2D) -> list[Vector2D]:
+        return self.intersection(segment)
+
+    def intersection_with_circle(self, circle: Circle2D) -> list[Vector2D]:
+        return self.intersection(circle)
 
     @staticmethod
-    def circum_circle(p0, p1, p2) -> Circle2D:
+    def circum_circle(p0: Vector2D, p1: Vector2D, p2: Vector2D) -> Circle2D:
         """
         brief get the circle through three points (circum_circle of the triangle).
         @param p0 triangle's 1st vertex
@@ -188,7 +204,7 @@ class Circle2D:
         return Circle2D(center, center.dist(p0))
 
     @staticmethod
-    def circle_contains(point, p0, p1, p2) -> bool:
+    def circum_circle_contains(point: Vector2D, p0: Vector2D, p1: Vector2D, p2: Vector2D) -> bool:
         """
         brief check if the circum_circle contains the input point
         @param point input point
@@ -197,15 +213,15 @@ class Circle2D:
         @param p2 triangle's 3rd vertex
         @return True if circum_circle contains the point, False.
         """
-        a = p1.x - p0.x
-        b = p1.y - p0.y
-        c = p2.x - p0.x
-        d = p2.y - p0.y
+        a = p1.x() - p0.x()
+        b = p1.y() - p0.y()
+        c = p2.x() - p0.x()
+        d = p2.y() - p0.y()
 
-        e = a * (p0.x + p1.x) + b * (p0.y + p1.y)
-        f = c * (p0.x + p2.x) + d * (p0.y + p2.y)
+        e = a * (p0.x() + p1.x()) + b * (p0.y() + p1.y())
+        f = c * (p0.x() + p2.x()) + d * (p0.y() + p2.y())
 
-        g = 2.0 * (a * (p2.y - p1.y) - b * (p2.x - p1.x))
+        g = 2.0 * (a * (p2.y() - p1.y()) - b * (p2.x() - p1.x()))
         if math.fabs(g) < 1.0e-10:
             return False
 

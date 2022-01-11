@@ -71,7 +71,7 @@ class Triangle2D(Region2D):
       \ return True if triangle is valid.
     """
 
-    def isValid(self):
+    def is_valid(self):
         return (self._a.is_valid() and self._b.is_valid() and self._c.is_valid() and
                 self._a != self._b and self._b != self._c and self._a != self._a)
 
