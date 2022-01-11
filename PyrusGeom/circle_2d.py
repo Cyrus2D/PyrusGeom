@@ -83,6 +83,13 @@ class Circle2D:
         brief get the center point
         @return center point coordinate value
         """
+        return Vector2D(self._center)
+
+    def center_(self):
+        """
+        brief get the center point
+        @return center point coordinate value
+        """
         return self._center
 
     def radius(self):

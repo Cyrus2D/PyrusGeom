@@ -44,9 +44,23 @@ class Ray2D:
         brief get origin point
         return const reference to the member variable
         """
-        return self._origin
+        return Vector2D(self._origin)
 
     def dir(self) -> AngleDeg:
+        """
+        brief get the angle of this ray line
+        return const reference to the member variable
+        """
+        return AngleDeg(self._direction)
+
+    def origin_(self) -> Vector2D:
+        """
+        brief get origin point
+        return const reference to the member variable
+        """
+        return self._origin
+
+    def dir_(self) -> AngleDeg:
         """
         brief get the angle of this ray line
         return const reference to the member variable
