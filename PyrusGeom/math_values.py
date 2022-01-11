@@ -1,6 +1,9 @@
+""" Common Conset Mathmatices velues and minmax error value
+    PI / EPSILON / DEG2RAD / RAD2DEG / CALC_ERROR / ERROR_VALUE
+"""
 PI = 3.14159265358979323846
 EPSILON = 1.0e-6
-ERROR_VALUE = 1e20
 DEG2RAD = PI / 180.0
 RAD2DEG = 180.0 / PI
 CALC_ERROR = 1.0e-9
+ERROR_VALUE = 1e20

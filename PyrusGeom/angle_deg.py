@@ -1,8 +1,11 @@
+""" angle_deg.py file
+    AngleDeg : class name
+    Class attributes : degree
+"""
 from __future__ import annotations
 from typing import Union
-from PyrusGeom.math_values import *
 import math
-
+from PyrusGeom.math_values import RAD2DEG,EPSILON,DEG2RAD
 
 class AngleDeg:
     """ handling degrees in SS2D
@@ -11,13 +14,13 @@ class AngleDeg:
     """
     def __init__(self, *args) -> None:
         """This is the class init function and normalizes the input degree.
-        
+
         Defualt:
             bulid a AngleDeg with value of 0 degree
         Args:
             *args:
                 none: for default angle
-                one: 
+                one:
                     AngleDeg: create a new AngleDeg with normalized input AngleDeg
                     Degree: create an AngleDeg with normalized degree
         Raises:
@@ -40,8 +43,8 @@ class AngleDeg:
         Returns:
             float: a new AngleDeg degree with the old AngleDeg's degree
         """
-        return AngleDeg(self._degree)._degree
-    
+        return AngleDeg(self._degree).degree()
+
     def degree_(self) -> float:
         """get the orginal degree
 
@@ -51,7 +54,7 @@ class AngleDeg:
         return self._degree
 
     def set_degree(self, degree: float) -> None:
-        """set a new degree for AngleDeg and normalizes it. 
+        """set a new degree for AngleDeg and normalizes it.
 
         Args:
             degree (float): new degree to set
@@ -69,7 +72,7 @@ class AngleDeg:
 
     def normal(self) -> None:
         """normalizing the degree
-        
+
         if the angle is below -360 degree or above 360 degree,
         it will calculating module of given degree by 360,
         and cap the angle between -180 degree and 180 degree.
@@ -84,7 +87,8 @@ class AngleDeg:
         if self._degree > 180.0:
             self._degree -= 360.0
 
-    def is_within(self, left: Union[AngleDeg, float, int], right: Union[AngleDeg, float, int]) -> bool:
+    def is_within(self, left: Union[AngleDeg, float, int],
+        right: Union[AngleDeg, float, int]) -> bool:
         """check if this AngleDeg is within [left, right] (turn clockwise)
 
         Args:
@@ -263,7 +267,7 @@ class AngleDeg:
 
         Returns:
             AngleDeg: this AngleDeg
-        """        
+        """
         self._degree /= other
         self.normal()
         return self
@@ -272,13 +276,13 @@ class AngleDeg:
         """operator add for AngleDeg
 
         Args:
-            other (Union[AngleDeg, float, int]): right hand side argument 
+            other (Union[AngleDeg, float, int]): right hand side argument
 
         Returns:
-            AngleDeg: a new Angledeg with value of 
+            AngleDeg: a new Angledeg with value of
             sum of left hand side argument and right hand side argument
-        """        
-        if type(other) == AngleDeg:
+        """
+        if isinstance(other,AngleDeg):
             new_angle_deg = AngleDeg(self._degree + other.degree())
         else:
             new_angle_deg = AngleDeg(self._degree + other)
@@ -288,16 +292,15 @@ class AngleDeg:
         """operator sub for AngleDeg
 
         Args:
-            other (Union[AngleDeg, float, int]): right hand side argument 
+            other (Union[AngleDeg, float, int]): right hand side argument
 
         Returns:
-            AngleDeg: a new Angledeg with value of 
+            AngleDeg: a new Angledeg with value of
             subtraction of right hand side argument from left hand side argument
-        """    
-        if type(other) == AngleDeg:
+        """
+        if isinstance(other,AngleDeg):
             return AngleDeg(self._degree - other._degree)
-        else:
-            return AngleDeg(self._degree - other)
+        return AngleDeg(self._degree - other)
 
     def __mul__(self, other: Union[float, int]) -> AngleDeg:
         """operator mul for AngleDeg
@@ -306,7 +309,7 @@ class AngleDeg:
             other (Union[float, int]): scalar multiply argument
 
         Returns:
-            AngleDeg: a new AngleDeg with the multiply of this AngleDeg and 
+            AngleDeg: a new AngleDeg with the multiply of this AngleDeg and
             scalar multiply argument
         """
         new_angle_deg = AngleDeg(self._degree * other)
@@ -319,7 +322,7 @@ class AngleDeg:
             other (Union[float, int]): scalar division argument
 
         Returns:
-            AngleDeg: a new AngleDeg with the floor division of this AngleDeg 
+            AngleDeg: a new AngleDeg with the floor division of this AngleDeg
             on scalar division argument
         """
         new_angle_deg = AngleDeg(self._degree / other)
@@ -383,7 +386,7 @@ class AngleDeg:
 
         Returns:
             float: tarngetn value
-        """        
+        """
         return math.tan(self._degree * DEG2RAD)
 
     @staticmethod
@@ -493,23 +496,24 @@ class AngleDeg:
         return AngleDeg.rad2deg(math.atan(tangent))
 
     @staticmethod
-    def atan2_deg(y: float, x: float) -> float:
+    def atan2_deg(y_val: float, x_val: float) -> float:
         """static utility. calculate arc tangent value from XY
 
         Args:
-            y (float): coordinate Y
-            x (float): coordinate X
+            y_val (float): coordinate Y
+            x_val (float): coordinate X
 
         Returns:
             float: arc tangent value.
         """
-        if math.fabs(x) < EPSILON and math.fabs(y) < EPSILON:
+        if math.fabs(x_val) < EPSILON and math.fabs(y_val) < EPSILON:
             return 0.0
         else:
-            return AngleDeg.rad2deg(math.atan2(y, x))
+            return AngleDeg.rad2deg(math.atan2(y_val, x_val))
 
     @staticmethod
-    def bisect(left: Union[int, float, AngleDeg], right: Union[int, float, AngleDeg]) -> Union[AngleDeg, float]:
+    def bisect(left: Union[int, float, AngleDeg],
+        right: Union[int, float, AngleDeg]) -> Union[AngleDeg, float]:
         """static utility that returns bisect angle of [left, right]
         this method can take obtuse angle
 
