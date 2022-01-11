@@ -10,13 +10,17 @@ class Vector2D:
         """
         brief default constructor : create Vector with XY value directly.
         Args:
-            param1: number for x
-            param2: number for y
-            or
-            param1: Vector2D
-            or
-            no param
-            if no params is passed, x and y will be 0
+            args: (number, number) or (Vector2D) or ()
+                (number, number)
+                first param: number for x
+                second param: number for y
+
+                (Vector2D)
+                first param: Vector2D
+
+                ()
+                no param
+                if no params is passed, x and y will be 0
         Raises:
             The input should be a Vector2D or two numbers or no input
         """

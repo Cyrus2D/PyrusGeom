@@ -16,17 +16,22 @@ class Line2D:
     def __init__(self, *args) -> None:
         """
         brief construct directly
-        param __a assigned a value
-        param __b assigned b value
-        param __c assigned c value
-        2 Vec
-        brief construct from 2 points
-        param p1 first point
-        param p2 second point
-        Vec + Ang
-        brief construct from origin point + direction
-        param org origin point
-        param linedir direction from origin point
+        Args:
+            args: (number, number, number) or (Vector2D, Vector2D) or (Vector2D, AngleDeg)
+                (number, number, number)
+                first param assigned a value
+                second param assigned b value
+                third param assigned c value
+
+                (Vector2D, Vector2D)
+                brief construct from 2 points
+                first param p1 first point
+                second param p2 second point
+
+                (Vector2D, AngleDeg)
+                brief construct from origin point + direction
+                first param org origin point
+                second param line dir direction from origin point
         """
         self._a = 0.0
         self._b = 0.0
@@ -63,29 +68,34 @@ class Line2D:
     def a(self) -> float:
         """
         brief accessor
-        return coefficient 'A'  of line formula
+        Return:
+             coefficient 'A'  of line formula
         """
         return self._a
 
     def b(self) -> float:
         """
         brief accessor
-        return coefficient 'B'  of line formula
+        Return:
+             coefficient 'B'  of line formula
         """
         return self._b
 
     def c(self) -> float:
         """
         brief accessor
-        return coefficient 'C'  of line formula
+        Return:
+             coefficient 'C'  of line formula
         """
         return self._c
 
     def get_x(self, y) -> float:
         """
         brief get X-coordinate correspond to 'y'
-        param y considered Y
-        return X coordinate
+        Args:
+             y: considered Y
+        Return:
+             X coordinate
         """
         if math.fabs(self._a) < EPSILON:
             return ERROR_VALUE
@@ -94,8 +104,10 @@ class Line2D:
     def get_y(self, x) -> float:
         """
         brief get Y-coordinate correspond to 'x'
-        param x considered X
-        return Y coordinate
+        Args:
+             x: considered X
+        Return:
+             Y coordinate
         """
         if math.fabs(self._b) < EPSILON:
             return ERROR_VALUE
@@ -107,8 +119,10 @@ class Line2D:
     def dist(self, p: Vector2D) -> float:
         """
         brief calculate distance from point to this line
-        param p considered point
-        return distance value
+        Args:
+             p: considered point
+        Return:
+             distance value
         """
         return math.fabs(
             (self._a * p.x() + self._b * p.y() + self._c) / math.sqrt(self._a * self._a + self._b * self._b))
@@ -116,8 +130,10 @@ class Line2D:
     def dist2(self, p: Vector2D) -> float:
         """
         brief get squared distance from this line to point
-        param p considered point
-        return squared distance value
+        Args:
+             p: considered point
+        Return:
+             squared distance value
         """
         d = self._a * p.x() + self._b * p.y() + self._c
         return (d * d) / (self._a * self._a + self._b * self._b)
@@ -125,33 +141,40 @@ class Line2D:
     def is_parallel(self, other) -> bool:
         """
         brief check if the slope of this line is same to the slope of 'other'
-        param other considered line
-        retval true almost same
-        retval false not same
+        Args:
+             other: considered line
+        Return:
+             true almost same, false not same
         """
         return math.fabs(self._a * other.b() - other.a() * self._b) < EPSILON
 
     def intersection(self, other: Union[Line2D]) -> Vector2D:
         """
         brief get the intersection point with 'other'
-        param other considered line
-        return intersection point. if it does not exist, the invalidated value vector is returned.
+        Args:
+            other: considered line
+        Return:
+             intersection point. if it does not exist, the invalidated value vector is returned.
         """
         return Line2D.line_intersection(self, other)
 
     def perpendicular(self, point):
         """
         brief calc perpendicular line
-        param point the point that perpendicular line pass through
-        return perpendicular line
+        Args:
+             point: the point that perpendicular line pass through
+        Return:
+             perpendicular line
         """
         return Line2D(self._b, -self._a, self._a * point.y() - self._b * point.x())
 
     def projection(self, point: Vector2D) -> Vector2D:
         """
         brief calc projection point from p
-        param p base point
-        return projection point
+        Args:
+             p base point
+        Return:
+             projection point
         """
         return self.intersection(self.perpendicular(point))
 
@@ -159,9 +182,11 @@ class Line2D:
     def line_intersection(line1: Line2D, line2: Line2D) -> Vector2D:
         """
         brief get the intersection point of 2 lines
-        param line1 the first line
-        param line2 the second line
-        return the intersection point. if no intersection, invalidated vector is returned.
+        Args:
+            line1: the first line
+            line2: the second line
+        Return:
+             the intersection point. if no intersection, invalidated vector is returned.
         """
         tmp = line1.a() * line2.b() - line1.b() * line2.a()
         if math.fabs(tmp) < EPSILON:
@@ -174,10 +199,12 @@ class Line2D:
     def angle_bisector(origin, left, right) -> Line2D:
         """
         brief make angle bisector line from two angles
-        param origin origin point that is passed through by result line
-        param left left angle
-        param right right angle
-        return line object
+        Args:
+            origin: origin point that is passed through by result line
+            left: left angle
+            right: right angle
+        Return:
+             line object
         """
         return Line2D(origin, AngleDeg.bisect(left, right))
 
@@ -185,9 +212,11 @@ class Line2D:
     def perpendicular_bisector(point1: Vector2D, point2: Vector2D) -> Line2D:
         """
         brief make perpendicular bisector line from twt points
-        param point1 1st point
-        param point2 2nd point
-        return line object
+        Args:
+            point1: 1st point
+            point2: 2nd point
+        Return:
+             line object
         """
         if math.fabs(point2.x() - point1.x()) < EPSILON and math.fabs(point2.y() - point1.y()) < EPSILON:
             print("Error : points have same coordinate values")
@@ -200,8 +229,9 @@ class Line2D:
     def __repr__(self):
         """
         brief make a logical print.
-        return print_able str
         aX + bY + c = 0
+        Return:
+             print_able str
         """
         if self._c == 0:
             return "({} X + {} Y = 0)".format(self._a, self._b)
