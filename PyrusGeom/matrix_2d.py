@@ -1,38 +1,47 @@
+""" file matrix_2d.py
+    Matrix2D: class name
 """
-    \ file matrix_2d.py
-    \ brief 2D transform matrix class File.
 
-    ( m11, m12, dx )
-    ( m21, m22, dy )
-    (   0,   0,  1 )
-
-
-     self.11 /element (1,1): the horizontal scaling factor.
-     self.12  element (1,2): the vertical shearing factor.
-     self.21  element (2,1): the horizontal shearing factor.
-     self.22 element (2,2): the vertical scaling factor.
-     self.dx  dx: the horizontal translation factor.
-     self.dy  dy: the vertical translation factor.
-
-"""
+from __future__ import annotations
+from typing import Union
+import math
 
 from PyrusGeom.vector_2d import Vector2D
 from PyrusGeom.angle_deg import AngleDeg
-import math
 
 
 class Matrix2D:
-    """
-      \ brief create a matrix with all elements OR create an identity matrix
-      \ param __11 the horizontal scaling factor.
-      \ param __12 the vertical shearing factor.
-      \ param __21 the horizontal shearing factor.
-      \ param __22 the vertical scaling factor.
-      \ param __x the horizontal translation factor.
-      \ param __y the vertical translation factor.
+    """ 2D transform matrix class File.
+
+        ( m11, m12, dxtf )
+        ( m21, m22, dytf )
+        (   0,   0,  1 )
+
+    Attributes:
+        self.11 element (1,1): the horizontal scaling factor.
+        self.12 element (1,2): the vertical shearing factor.
+        self.21 element (2,1): the horizontal shearing factor.
+        self.22 element (2,2): the vertical scaling factor.
+        self.dxtf dxtf: the horizontal translation factor.
+        self.dytf dytf: the vertical translation factor.
+
     """
 
     def __init__(self, __11=1.0, __12=0.0, __21=0.0, __22=1.0, __x=0.0, __y=0.0):
+        """This is the class init function and creates a matrix2d
+
+        Defualt:
+            create a matrix with all the given elements
+        OR
+            create an identity matrix
+        Args:
+            __11 (float, optional): the horizontal scaling factor. Defaults to 1.0.
+            __12 (float, optional): the vertical shearing factor. Defaults to 0.0.
+            __21 (float, optional): the horizontal shearing factor. Defaults to 0.0.
+            __22 (float, optional): the vertical scaling factor. Defaults to 1.0.
+            __x (float, optional): the horizontal translation factor. Defaults to 0.0.
+            __y (float, optional): the vertical translation factor. Defaults to 0.0.
+        """
         self._m11 = __11
         self._m12 = __12
         self._m21 = __21
@@ -41,25 +50,23 @@ class Matrix2D:
         self._dy = __y
         self.is_valid = True
 
-    """
-      \ brief reset to the identity matrix
-    """
-
     def reset(self):
+        """ reset this matrix to the identity matrix
+        """
         self._m11 = self._m22 = 1.0
         self._m12 = self._m21 = self._dx = self._dy = 0.0
 
-    """
-      \ brief set a matrix element with the specified values.
-      \ param __11 the horizontal scaling factor.
-      \ param __12 the vertical shearing factor.
-      \ param __21 the horizontal shearing factor.
-      \ param __22 the vertical scaling factor.
-      \ param __x the horizontal translation factor.
-      \ param __y the vertical translation factor.
-    """
+    def assign(self, __11: float, __12: float, __21: float, __22: float, __x: float, __y: float):
+        """set this matrix elements with the given specified values.
 
-    def assign(self, __11, __12, __21, __22, __x, __y):
+        Args:
+            __11 (float): the horizontal scaling factor.
+            __12 (float): the vertical shearing factor.
+            __21 (float): the horizontal shearing factor.
+            __22 (float): the vertical scaling factor.
+            __x (float): the horizontal translation factor.
+            __y (float): the vertical translation factor.
+        """
         self._m11 = __11
         self._m12 = __12
         self._m21 = __21
@@ -67,78 +74,78 @@ class Matrix2D:
         self._dx = __x
         self._dy = __y
 
-    """
-      \ brief accessor : get the horizontal scaling factor.
-      \ return the horizontal scaling factor value.
-    """
+    def m11(self) -> float:
+        """get the horizontal scaling factor.
 
-    def m11(self):
+        Returns:
+            float: the horizontal scaling factor value.
+        """
         return self._m11
 
-    """
-      \ brief accessor : get the vertical shearing factor.
-      \ return the vertical shearing factor value.
-    """
+    def m12(self) -> float:
+        """get the vertical shearing factor.
 
-    def m12(self):
+        Returns:
+            float: return the vertical shearing factor value.
+        """
         return self._m12
 
-    """
-      \ brief accessor : get the horizontal shearing factor.
-      \ return the horizontal shearing factor value.
-    """
+    def m21(self) -> float:
+        """get the horizontal shearing factor.
 
-    def m21(self):
+        Returns:
+            float: the horizontal shearing factor value.
+        """
         return self._m21
 
-    """
-      \ brief accessor : get the vertical scaling factor.
-      \ return the vertical scaling factor value.
-    """
+    def m22(self) -> float:
+        """get the vertical scaling factor.
 
-    def m22(self):
+        Returns:
+            float: the vertical scaling factor value.
+        """
         return self._m22
 
-    """
-      \ brief accessor : get the horizontal translation factor.
-      \ return the horizontal translation factor value.
-    """
+    def dxtf(self) -> float:
+        """get the horizontal translation factor.
 
-    def dx(self):
+        Returns:
+            float: the horizontal translation factor value.
+        """
         return self._dx
 
-    """
-      \ brief accessor : get the vertical translation factor.
-      \ return the vertical translation factor value.
-    """
+    def dytf(self) -> float:
+        """get the vertical translation factor.
 
-    def dy(self):
+        Returns:
+            float: the vertical translation factor value.
+        """
         return self._dy
 
-    """ 
-     \ brief get the matrix's determinant
-     \ return the determinant value.
-    """
+    def det(self) -> float:
+        """get the matrix's determinant
 
-    def det(self):
+        Returns:
+            float: the determinant value.
+        """
         return self._m11 * self._m22 - self._m12 * self._m21
 
-    """
-      \ brief check if this matrix is invertible (is not insular).
-      \ return true if this matrix is invertible.
-    """
+    def invertible(self) -> bool:
+        """check if this matrix is invertible (is not insular).
 
-    def invertible(self):
+        Returns:
+            bool: true if this matrix is invertible.else false.
+        """
         return math.fabs(self.det()) > 0.00000000001
 
-    """
-      \ brief get the inverted matrix.
-      \ return the inverted matrix object.
-    """
+    def inverted(self) -> Matrix2D:
+        """get the inverted matrix.
 
-    def inverted(self):
+        Returns:
+            Matrix2D: the inverted matrix object.
+        """
         determinant = self.det()
-        if determinant == 0.0:  # never invertible
+        if determinant == 0.0:  # not invertible
             return Matrix2D()  # default matrix
 
         dinv = 1.0 / determinant
@@ -147,46 +154,46 @@ class Matrix2D:
                         (self._m12 * self._dy - self._dx * self._m22) * dinv,
                         (self._dx * self._m21 - self._m11 * self._dy) * dinv)
 
-    """
-      \ brief moves the coordinate as the other matrix.
-      \ param dx move factor for the x axis.
-      \ param dy move factor for the y axis.
-      
-      same as :
-        self = Matrix2D.make_translation(dx,dy) * self
-      
-    """
+    def translate(self, dxtf:float, dytf:float):
+        """moves the coordinate as the other matrix.
 
-    def translate(self, dx, dy):
-        self._dx += dx
-        self._dy += dy
+        SameAs:
+            self = Matrix2D.make_translation(dxtf,dytf) * self
 
-    """
-      \ brief scales the coordinate systeother.
-      \ param sx scaling factor for the x axis.
-      \ param sy scaling factor for the y axis.
+        Args:
+            dxtf (float): move factor for the x axis.
+            dytf (float): move factor for the y axis.
+        """    
+        self._dx += dxtf
+        self._dy += dytf
 
-      same as:
-        self = Matrix2D.make_scaling(sx,sy) * self        
-    """
+    def scale(self, scale_x:float, scale_y:float):
+        """scales the coordinate.
 
-    def scale(self, sx, sy):
-        self._m11 *= sx
-        self._m12 *= sx
-        self._dx *= sx
-        self._m21 *= sy
-        self._m22 *= sy
-        self._dy *= sy
+        SameAs:
+            self = Matrix2D.make_scaling(scale_x,scale_y) * self   
 
-    """
-      \ brief rotates the coordinate system
-      \ param angle rotation angle
-      
-      same as:
-        self = Matrix2D.make_rotation(angle) * self
-    """
+        Args:
+            scale_x (float): scaling factor for the x axis.
+            scale_y (float): scaling factor for the y axis.
+        """
+        self._m11 *= scale_x
+        self._m12 *= scale_x
+        self._dx *= scale_x
+        self._m21 *= scale_y
+        self._m22 *= scale_y
+        self._dy *= scale_y
+
 
     def rotate(self, angle: AngleDeg):
+        """rotates the coordinate system
+
+        SameAs:
+            self = Matrix2D.make_rotation(angle) * self
+
+        Args:
+            angle (AngleDeg): rotation angle
+        """
         ang_sin = angle.sin()
         ang_cos = angle.cos()
         tm11 = self._m11 * ang_cos - self._m21 * ang_sin
@@ -203,87 +210,98 @@ class Matrix2D:
         self._m22 = tm22
         self._dy = tdy
 
-    """
-        Len = 1 / Vector2D
-      \ brief create transformed vector from input vector with this matrix
-      \ param v input vector
-      \ return mapped vector object
-        Len = 2 / XY
-      \ brief create transformed vector from input coordinates with this matrix
-      \ param x input x-coordinates value
-      \ param y input y-coordinates value
-      \ return mapped vector object
-    """
+    def transform(self, *args) -> Vector2D:
+        """create transformed vector from input
 
-    def transform(self, *args):  # **kwargs):
+        Args:
+            One:
+                vector (Vector2D): input vector
+            Two:
+                x (float): input x-coordinates value
+                y (folat): input y-coordinates value
+        Raises:
+            Exception: Need one Vector2D or Two floats
+                to pervent raise
+
+        Returns:
+            Vector2D : mapped vector object
+        """
         if len(args) == 1:
-            v = args[0]
-            return Vector2D(self._m11 * v.x + self._m12 * v.y + self._dx,
-                            self._m21 * v.x + self._m22 * v.y + self._dy)
+            vector = args[0]
+            return Vector2D(self._m11 * vector.x + self._m12 * vector.y + self._dx,
+                            self._m21 * vector.x + self._m22 * vector.y + self._dy)
         if len(args) == 2:
             return Vector2D(self._m11 * args[0] + self._m12 * args[1] + self._dx,
                             self._m21 * args[0] + self._m22 * args[1] + self._dy)
 
-    """
-      \ brief transform input vector with this matrix
-      \ param v input vector
-    """
+        raise Exception('The input should must inclue a Vector2D or two float for xy')
 
-    def transform_vec(self, v: Vector2D):
-        tx = self._m11 * v.x() + self._m12 * v.y() + self._dx
-        ty = self._m21 * v.x() + self._m22 * v.y() + self._dy
-        v.assign(tx, ty)
+    def transform_vec(self, vector: Vector2D) -> Vector2D:
+        """transform input vector with this matrix
 
-    """  ----------------- static method  ----------------- """
+        Args:
+            vector (Vector2D): input vector
 
-    """
-      \ brief create the translation matrix.
-      \ param dx the horizontal translation factor.
-      \ param dy the vertical translation factor.
-      \ return new matrix object  
-    """
+        Returns:
+            Vector2D: trasformed vector
+        """
+        t_x = self._m11 * vector.x() + self._m12 * vector.y() + self._dx
+        t_y = self._m21 * vector.x() + self._m22 * vector.y() + self._dy
+        vector.assign(t_x, t_y)
+        return vector
 
     @staticmethod
-    def make_translation(dx, dy):
-        return Matrix2D(1.0, 0.0, 0.0, 1.0, dx, dy)
+    def make_translation(dxtf:float, dytf:float) -> Matrix2D:
+        """create the translation matrix.
 
-    """
-      \ brief create the scaling matrix.
-      \ param sx the horizontal scaling factor.
-      \ param sy the vertical scaling factor.
-      \ return new matrix object
-    """
+        Args:
+            dxtf (float): the horizontal translation factor.
+            dytf (float): the vertical translation factor.
 
-    @staticmethod
-    def make_scaling(sx, sy):
-        return Matrix2D(sx, 0.0, 0.0, sy, 0.0, 0.0)
-
-    """
-      \ brief create the rotation matrix.
-      \ param angle the rotation angle
-      \ return new matrix object
-    """
+        Returns:
+            Matrix2D: new matrix object
+        """
+        return Matrix2D(1.0, 0.0, 0.0, 1.0, dxtf, dytf)
 
     @staticmethod
-    def make_rotation(angle: AngleDeg):
+    def make_scaling(scale_x:float, scale_y:float) -> Matrix2D:
+        """create the scaling matrix.
+
+        Args:
+            scale_x (float): the horizontal scaling factor.
+            scale_y (float): the vertical scaling factor.
+
+        Returns:
+            Matrix2D: new matrix object
+        """
+        return Matrix2D(scale_x, 0.0, 0.0, scale_y, 0.0, 0.0)
+
+    @staticmethod
+    def make_rotation(angle: AngleDeg) -> Matrix2D:
+        """create the rotation matrix.
+
+        Args:
+            angle (AngleDeg): angle the rotation angle
+
+        Returns:
+            Matrix2D: new matrix object
+        """
         ang_cos = angle.cos()
         ang_sin = angle.sin()
         return Matrix2D(ang_cos, -ang_sin, ang_sin, ang_cos, 0.0, 0.0)
 
-    """ ----------------- operators section  ----------------- """
+    def __imul__(self, other:Matrix2D):
+        """multiplied by other matrix
 
-    """
-      \ brief multiplied by other matrix
-      \ param other left hand side matrix
-    """
-
-    def __imul__(self, other):
+        Args:
+            other ([Matrix2D]): left hand side matrix
+        """
         tm11 = self._m11 * other.m11() + self._m12 * other.m21()
         tm12 = self._m11 * other.m12() + self._m12 * other.m22()
         tm21 = self._m21 * other.m11() + self._m22 * other.m21()
         tm22 = self._m21 * other.m12() + self._m22 * other.m22()
-        tdx = self._m11 * other.dx() + self._m12 * other.dcy() + self._dx
-        tdy = self._m21 * other.dx() + self._m22 * other.dy() + self._dy
+        tdx = self._m11 * other.dxtf() + self._m12 * other.dytf() + self._dx
+        tdy = self._m21 * other.dxtf() + self._m22 * other.dytf() + self._dy
 
         self._m11 = tm11
         self._m12 = tm12
@@ -292,40 +310,28 @@ class Matrix2D:
         self._dx = tdx
         self._dy = tdy
 
-    """
-        Len = 1 / Matrix2D
-     \ brief multiplication operator of Matrix x Matrix.
-     \ param lhs left hand side matrix.
-     \ param rhs right hand side matrix
-     \ return result matrix object
-        Len = 1 / Vector2D
-     \ brief multiplication(transformation) operator of Matrix x Vector.
-     \ param lhs left hand side matrix.
-     \ param rhs right hand side vector
-     \ return result vector object
-    """
+    def __mul__(self, other:Union[Matrix2D, Vector2D]) -> Union[Matrix2D, Vector2D]:
+        """multiplication operator of Matrix * Matrix OR
+        multiplication(transformation) operator of Matrix x Vector.
 
-    def __mul__(self, *args):  # , **kwargs):):
-        if len(args) == 1 and type(args[0]) == Vector2D:
-            return self.transform(args[0])
-        if len(args) == 1:
+        Args:
+            other (Union[Matrix2D, Vector2D]): right hand side matrix OR vector
+
+        Returns:
+            Union[Matrix2D, Vector2D]: result matrix object or vector opject
+        """
+        if isinstance(other,Vector2D):
+            return self.transform(other)
+        if isinstance(other,Matrix2D):
             mat_tmp = self
-            return mat_tmp.__imul__(args[0])
-
-    """
-      \ brief make a logical print.
-      \ return print_able str
-    """
+            return mat_tmp.__imul__(other)
+        return self
 
     def __repr__(self):
-        return "{ [ " + str(self._m11) + " ] , [ " + str(self._m12) + " ] , [ " + str(self._dx) + " ]\n  [ " + str(
-            self._m21) + " ] , [ " + str(self._m22) + " ] , [ " + str(self._dy) + " ] }"
+        """represent the Matrix2D as a logical string
 
-
-def test():
-    a = Matrix2D()
-    print(a)
-
-
-if __name__ == "__main__":
-    test()
+        Returns:
+            str: contains Matrix2D index
+        """
+        return f"{{ [{self._m11}], [{self._m12}], [{self._dx}]\n \
+                [{self._m21}] , [{self._m22}] , [{self._dy}] }}"

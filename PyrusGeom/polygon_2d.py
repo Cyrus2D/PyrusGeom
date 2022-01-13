@@ -118,7 +118,7 @@ class YMoreEqual:
 
 
 class Polygon2D(Region2D):
-    """ handelting polygons in SS2D
+    """ handling polygons in SS2D
 
     Args:
         Region2D (mother class): each polygon is a region
@@ -132,7 +132,7 @@ class Polygon2D(Region2D):
 
             Defualt:
                 create an empty polygon with one point (0,0).
-            or
+            OR
                 create a polygon with given points
             Args:
                 none: for default empty polygon
