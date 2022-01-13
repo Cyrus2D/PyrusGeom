@@ -80,7 +80,7 @@ class TestConvexHull(TestCase):
         alpha_point = Vector2D(20, 10)
         beta_point = Vector2D(-10, 20)
         gamma_point = Vector2D(20, 20)
-        self.assertEqual(angle_sort_predicate(alpha_point, beta_point), -1)
+        self.assertEqual(angle_sort_predicate(alpha_point, beta_point), 1)
         self.assertEqual(angle_sort_predicate(
             alpha_point, beta_point, gamma_point), -1)
 
