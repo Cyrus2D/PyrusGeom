@@ -38,12 +38,13 @@ class AngleDeg:
         self.normal()
 
     def degree(self) -> float:
-        """get the degree in a new AngleDeg
-
+        """get the degree in a new AngleDeg copy
+        # TODO: do we need this?
         Returns:
             float: a new AngleDeg degree with the old AngleDeg's degree
         """
-        return AngleDeg(self._degree).degree()
+        degree_cp = AngleDeg(self._degree)
+        return degree_cp.degree_()
 
     def degree_(self) -> float:
         """get the orginal degree
