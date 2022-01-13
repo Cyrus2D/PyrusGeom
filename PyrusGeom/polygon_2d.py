@@ -1,8 +1,9 @@
-"""
-  \ file polygon_2d.py
-  \ brief 2D polygon region File.
+""" polygon_2d.py file
+    Polygon2D: class name
 """
 from __future__ import annotations
+import math
+
 from PyrusGeom.rect_2d import Rect2D
 from PyrusGeom.region_2d import Region2D
 from PyrusGeom.vector_2d import Vector2D
@@ -10,264 +11,339 @@ from PyrusGeom.angle_deg import AngleDeg
 from PyrusGeom.size_2d import Size2D
 from PyrusGeom.line_2d import Line2D
 from PyrusGeom.segment_2d import Segment2D
-import math
 
 
 class XLessEqual:
-    def __init__(self, thr):
+    """cmp key class for point.x less or equal than threshold
+    """
+    def __init__(self, thr:float):
         self._thr = thr
 
-    def operator(self, p: Vector2D):
-        return p.x() <= self._thr
+    def __call__(self, point: Vector2D) -> bool:
+        """operator <=
 
-    def thr(self):
+        Args:
+            point (Vector2D): point to check
+
+        Returns:
+            bool: return true if point x is less or equal than threshold
+        """
+        return point.x() <= self._thr
+
+    def thr(self) -> float:
+        """return the threshold
+
+        Returns:
+            float: return key threshold
+        """
         return self._thr
 
 
 class XMoreEqual:
-    def __init__(self, thr):
+    """cmp key class for point.x more or equal than threshold
+    """
+    def __init__(self, thr:float):
         self._thr = thr
 
-    def operator(self, p: Vector2D):
-        return p.x() >= self._thr
+    def __call__(self, point: Vector2D) -> bool:
+        """operator >=
 
-    def thr(self):
+        Args:
+            point (Vector2D): point to check
+
+        Returns:
+            bool: return true if point x is more or equal than threshold
+        """
+        return point.x() >= self._thr
+
+    def thr(self) -> float:
+        """return the threshold
+
+        Returns:
+            float: return key threshold
+        """
         return self._thr
 
 
 class YLessEqual:
-    def __init__(self, thr):
+    """cmp key class for point.y less or equal than threshold
+    """
+    def __init__(self, thr:float):
         self._thr = thr
 
-    def operator(self, p: Vector2D):
-        return p.y() <= self._thr
+    def __call__(self, point: Vector2D) -> bool:
+        """operator <=
 
-    def thr(self):
+        Args:
+            point (Vector2D): point to check
+
+        Returns:
+            bool: return true if point y is less or equal than threshold
+        """
+        return point.y() <= self._thr
+
+    def thr(self) -> float:
+        """return the threshold
+
+        Returns:
+            float: return key threshold
+        """
         return self._thr
 
 
 class YMoreEqual:
-    def __init__(self, thr):
+    """cmp key class for point.y more or equal than threshold
+    """
+    def __init__(self, thr:float):
         self._thr = thr
 
-    def operator(self, p: Vector2D):
-        return p.y() >= self._thr
+    def __call__(self, point: Vector2D) -> bool:
+        """operator >=
 
-    def thr(self):
+        Args:
+            point (Vector2D): point to check
+
+        Returns:
+            bool: return true if point y is more or equal than threshold
+        """
+        return point.y() >= self._thr
+
+    def thr(self) -> float:
+        """return the threshold
+
+        Returns:
+            float: return key threshold
+        """
         return self._thr
 
 
 class Polygon2D(Region2D):
-    """
-      \ brief create empty polygon
-        List:
-      \ brief create polygon with points
-      \ param v array of points
+    """ handelting polygons in SS2D
+
+    Args:
+        Region2D (mother class): each polygon is a region
+
+    Attributes:
+        _vertices : a list of vectors
     """
 
-    def __init__(self, *args):  # , **kwargs):)
+    def __init__(self, *args):
+        """This is the class init function and creates the polygon.
+
+            Defualt:
+                create an empty polygon with one point (0,0).
+            or
+                create a polygon with given points
+            Args:
+                none: for default empty polygon
+                one:
+                    list: array of input points
+                else:
+                    bunch of vector2D
+
+        """
         super().__init__()
         if len(args) == 0:
             self._vertices = [Vector2D()]
         elif len(args[0]) > 0:
-            self._vertices = args[0]
+            self._vertices = args[0].copy()
         else:
-            self._vertices = [Vector2D()]
+            self._vertices = args
 
-    """
-      \ brief clear all data.
-    """
-
-    def clear(self):
+    def clear(self) -> None:
+        """clear all data.
+        """
         self._vertices = [Vector2D()]
 
-    """
-      \ brief set polygon with points
-      \ param v array of points
-      \ return  reference to itself
-    """
+    def assign(self, points:list[Vector2D]) -> Polygon2D:
+        """set polygon with given points and returns a reference to itself
+        Args:
+            points(list) : points to assign
+        Returns:
+            Polygon2D: rturn itself
+        """
+        if len(points) > 0:
+            self._vertices = points.copy()
+        return self
 
-    def assign(self, v):
-        if len(v[0]) > 0:
-            self._vertices = v
+    def add_vertex(self, point: Vector2D) -> None:
+        """append point to polygon
 
-    """
-      \ brief append point to polygon
-      \ param p point
-    """
+        Args:
+            point(Vector2d): point to add
+        """
+        self._vertices.append(point)
 
-    def addVertex(self, p: Vector2D):
-        self._vertices.append(p)
+    def vertices(self) -> list[Vector2D]:
+        """get a copy list from the vertex container
 
-    """
-      \ brief get list of point of self polygon
-      \ return  reference to point list
-    """
+        Returns:
+            list: a list with the vertex container values
+        """
+        vertices_cp = self._vertices.copy()
+        return vertices_cp
 
-    def vertices(self):
+    def vertices_(self) -> list:
+        """ get the reference and og list to the vertex container
+
+        Returns:
+            list: a reference to the vertex container
+        """
         return self._vertices
 
-    """
-      \ brief get bounding box of self polygon
-      \ return bounding box of self polygon
-    """
+    def get_bounding_box(self) -> Rect2D:
+        """get bounding box of this polygon
 
-    def getBoundingBox(self):
+        Returns:
+            bounding box of this polygon
+        """
         if len(self._vertices) == 0:
             return Rect2D()
         x_min = float("inf")
         x_max = - float("inf")
         y_min = float("inf")
         y_max = - float("inf")
-        for p in self._vertices:
-            if p.x() > x_max:
-                x_max = p.x()
+        for point in self._vertices:
+            if point.x() > x_max:
+                x_max = point.x()
 
-            if p.x() < x_min:
-                x_min = p.x()
+            if point.x() < x_min:
+                x_min = point.x()
 
-            if p.y() > y_max:
-                y_max = p.y()
+            if point.y() > y_max:
+                y_max = point.y()
 
-            if p.y() < y_min:
-                y_min = p.y()
+            if point.y() < y_min:
+                y_min = point.y()
         return Rect2D(Vector2D(x_min, y_min), Size2D(x_max - x_min, y_max - y_min))
 
-    """
-      \ brief check point is in self polygon or not
-      \ param p point for checking
-      \ param allow_on_segment when point is on outline,
-      if self parameter is set to True, True
-      \ return True if point is in self polygon
-    """
+    def contains(self, point: Vector2D, allow_on_segment:bool=True) :#-> bool:
+        # TODO : how to OverLoad in python
+        """check if given point is in this polygon or not
 
-    def contains(self, p: Vector2D, allow_on_segment=True):
+        Args:
+            point(Vector2D): point to check
+            allow_on_segment(bool): allows points on the outline
+
+        Returns:
+            bool: True if point is in this polygon (or on the line)
+        """
+
         if len(self._vertices) <= 0:
             return False
-        elif len(self._vertices) == 1:
-            return allow_on_segment and (self._vertices[0] == p)
+        if len(self._vertices) == 1:
+            return allow_on_segment and (self._vertices[0] == point)
 
-        r = self.getBoundingBox()
-        if not r.contains(p):
+        bounding_box = self.get_bounding_box()
+        if not bounding_box.contains(point):
             return False
 
-        #
         # make virtual half line
-        #
-        # print(r.right()) -> maxX
-        line = Segment2D(p, Vector2D(p.x() + ((r.right() - r.left() + r.bottom() - r.top())
-                                              + (self._vertices[0] - p).r()) * 3.0,
-                                     p.y()))
+        line = Segment2D(point, Vector2D(point.x() + ((
+            bounding_box.right() - bounding_box.left() + bounding_box.bottom() - bounding_box.top())
+            + (self._vertices[0] - point).r()) * 3.0, point.y()))
 
-        #
         # check intersection with all segments
-        #
         inside = False
-        min_line_x = r.right() + 1.0
+        min_line_x = bounding_box.right() + 1.0
         for i in range(len(self._vertices)):
             p1_index = i + 1
 
             if p1_index >= len(self._vertices):
                 p1_index = 0
 
-            p0 = self._vertices[i]
-            p1 = self._vertices[p1_index]
+            p_0 = self._vertices[i]
+            p_1 = self._vertices[p1_index]
 
-            if not allow_on_segment:
-                if Segment2D(p0, p1).on_segment(p):
-                    return False
+            if not allow_on_segment and Segment2D(p_0, p_1).on_segment(point):
+                return False
 
-            if allow_on_segment and p == p0:
+            if allow_on_segment and point == p_0:
                 return True
 
-            if line.exist_intersection(segment=Segment2D(p0, p1)):
-                if p0.y() == p.y() or p1.y() == p.y():
-                    if p0.y() == p.y():
-                        if p0.x() < min_line_x:
-                            min_line_x = p0.x()
+            if line.exist_intersection(Segment2D(p_0, p_1)):
+                if p_0.y() == point.y() or p_1.y() == point.y():
+                    if p_0.y() == point.y():
+                        if p_0.x() < min_line_x:
+                            min_line_x = p_0.x()
 
-                    if p1.y() == p.y():
-                        if p1.x() < min_line_x:
-                            min_line_x = p1.x()
+                    if p_1.y() == point.y():
+                        if p_1.x() < min_line_x:
+                            min_line_x = p_1.x()
 
-                    if p0.y() == p1.y():
+                    if p_0.y() == p_1.y() or p_0.y() < point.y() or p_1.y() < point.y():
                         continue
-
-                    elif p0.y() < p.y() or p1.y() < p.y():
-                        continue
-
-                inside = (not inside)
+                inside = not inside # inside * -2 #
 
         return inside
 
-    """
-      \ brief get center of bounding box of self polygon
-      \ return center of bounding box of self polygon
-    """
+    def bounding_box_center(self) -> Vector2D:
+        """get center of bounding box of this polygon
 
-    def xyCenter(self):
-        return self.getBoundingBox().center()
+        Returns:
+            Vector2D: center of bounding box of this polygon
+        """
+        return self.get_bounding_box().center()
 
-    """
-      \ brief get minimum distance between self polygon and point
-      \ param p point
-      \ param check_as_plane if self parameter is set to True, self
-      polygon as a plane polygon,
-      otherwise handle self polygon as a polyline polygon.
-      when point is inside of self polygon, between plane polygon
-      and point is 0,
-      distance between polyline polygon and point is minimum distance
-      between each segments of self polygon.
-      \ return minimum distance between self polygon and point
-    """
+    def dist(self, point: Vector2D, check_as_plane=True) -> float:
+        """get minimum distance between this polygon and point
 
-    def dist(self, p: Vector2D, check_as_plane=True):
+        Args:
+            point(Vector2d): point to check
+            check_as_plane(bool): if this parameter is true, the polygon
+            counts as a plane polygon otherwise as a polyline polygon.
+
+        Returns:
+            float: minimum distance between this polygon and point
+        """
         size = len(self._vertices)
 
         if size == 1:
-            return (self._vertices[0] - p).r()
+            return (self._vertices[0] - point).r()
 
-        if check_as_plane and self.contains(p):
+        if check_as_plane and self.contains(point):
             return 0.0
 
-        min_dist = float("inf")
+        min_dist = float('inf')
         for i in range(size - 1):
 
             seg = Segment2D(self._vertices[i],
                             self._vertices[i + 1])
 
-            d = seg.dist(p)
+            point_dist = seg.dist(point)
 
-            if d < min_dist:
-                min_dist = d
+            if point_dist < min_dist:
+                min_dist = point_dist
 
         if size >= 3:
             seg = Segment2D(self._vertices[size - 1], self._vertices[0])
 
-            d = seg.dist(p)
+            point_dist = seg.dist(point)
 
-            if d < min_dist:
-                min_dist = d
+            if point_dist < min_dist:
+                min_dist = point_dist
 
         return min_dist
 
-    """
-      \ brief get area of self polygon
-      \ return value of area with sign.
-    """
 
-    def area(self):
-        return math.fabs(self.doubleSignedArea() * 0.5)
+    def area(self) -> float:
+        """get area of this polygon
 
-    """
-      \ brief calculate doubled signed area value
-      \ return value of doubled signed area.
-      If vertices are placed counterclockwise order, positive number.
-      If vertices are placed clockwise order, negative number.
-      Otherwise, 0.
-    """
+        Returns:
+            float: value of area with sign.
+        """
+        return math.fabs(self.double_signed_area() * 0.5)
 
-    def doubleSignedArea(self):
+    def double_signed_area(self) -> float:
+        """calculate doubled signed area value
+
+        If vertices are placed counterclockwise order, positive number.
+        If vertices are placed clockwise order, negative number.
+        Otherwise, 0.
+
+        Returns:
+            float: value of doubled signed area.
+        """
         size = len(self._vertices)
         ds_area_value = 0.0
 
@@ -275,118 +351,127 @@ class Polygon2D(Region2D):
             return ds_area_value
 
         for i in range(size):
-            n = i + 1
-            if n == size:
-                n = 0
-            ds_area_value += (
-                    self._vertices[i].x() * self._vertices[n].y() - self._vertices[n].x() * self._vertices[i].y())
+            n_count = i + 1
+            if n_count == size:
+                n_count = 0
+            ds_area_value += (self._vertices[i].x() * self._vertices[n_count].y()
+                              - self._vertices[n_count].x() * self._vertices[i].y())
 
         return ds_area_value
 
-    """
-      \ brief check vertexes of self polygon is placed counterclockwise ot not
-      \ return True if counterclockwise
-    """
+    def is_counter_clockwise(self) -> bool:
+        """check vertexes of self polygon is placed counterclockwise ot not
 
-    def isCounterclockwise(self):
-        return self.doubleSignedArea() > 0.0
+        Returns:
+            bool: True if counterclockwise. else false
+        """
+        return self.double_signed_area() > 0.0
 
-    """
-      \ brief check vertexes of self polygon is placed clockwise ot not
-      \ return True if clockwise
-    """
+    def is_clockwise(self) -> bool:
+        """check vertexes of self polygon is placed clockwise ot not
 
-    def isClockwise(self):
-        return self.doubleSignedArea() < 0.0
+        Returns:
+            bool: True if clockwise. else false
+        """
+        return self.double_signed_area() < 0.0
 
-    """
-      \ brief get a polygon clipped by a rectangle
-      \ param r rectangle for clipping
-      \ return a polygon. if polygon is separated by edges of rectangle,
-      each separated polygon is connected to one polygon.
-    """
+    def get_rectangle_clipped_polygon(self, rect: Rect2D) -> Polygon2D:
+        """get a polygon clipped and cropped by a rectangle
 
-    def getScissoredConnectedPolygon(self, r: Rect2D):
+        if polygon is divided into more by edges of rectangle, each
+        separated polygon is going to connect to the frist polygon.
+
+        Args:
+            rect (Rect2D): rectangle for clipping
+
+        Returns:
+            Polygon2D: a united polygon
+        """
         if len(self._vertices) == 0:
             return Polygon2D()
 
-        p = self._vertices
+        points = self._vertices
         clipped_p_1 = []
         clipped_p_2 = []
         clipped_p_3 = []
         clipped_p_4 = []
-        clipped_p_1 = Polygon2D.scissorWithLine(XLessEqual(r.right()),
-                                                p, clipped_p_1,
-                                                Line2D(origin=Vector2D(r.maxX(), 0.0), angle=AngleDeg(90.0)))
+        clipped_p_1 = Polygon2D.get_line_clipped_polygon(XLessEqual(rect.right()),
+                                                points,
+                                                Line2D(Vector2D(rect.right(), 0.0), AngleDeg(90.0)))
 
-        clipped_p_2 = Polygon2D.scissorWithLine(YLessEqual(r.bottom()),
-                                                clipped_p_1, clipped_p_2,
-                                                Line2D(origin=Vector2D(0.0, r.maxY()), angle=AngleDeg(0.0)))
+        clipped_p_2 = Polygon2D.get_line_clipped_polygon(YLessEqual(rect.bottom()),
+                                                clipped_p_1,
+                                                Line2D(Vector2D(0.0, rect.top()), AngleDeg(0.0)))
 
-        clipped_p_3 = Polygon2D.scissorWithLine(XMoreEqual(r.left()),
-                                                clipped_p_2, clipped_p_3,
-                                                Line2D(origin=Vector2D(r.minX(), 0.0), angle=AngleDeg(90.0)))
+        clipped_p_3 = Polygon2D.get_line_clipped_polygon(XMoreEqual(rect.left()),
+                                                clipped_p_2,
+                                                Line2D(Vector2D(rect.left(), 0.0), AngleDeg(90.0)))
 
-        clipped_p_4 = Polygon2D.scissorWithLine(YMoreEqual(r.top()),
-                                                clipped_p_3, clipped_p_4,
-                                                Line2D(origin=Vector2D(0.0, r.minY()), angle=AngleDeg(0.0)))
+        clipped_p_4 = Polygon2D.get_line_clipped_polygon(YMoreEqual(rect.top()),
+                                                clipped_p_3,
+                                                Line2D(Vector2D(0.0, rect.top()), AngleDeg(0.0)))
 
         return Polygon2D(clipped_p_4)
 
     @staticmethod
-    def scissorWithLine(in_region, points, new_points, line):
-        new_points.clear()
+    def get_line_clipped_polygon(in_region, points:list[Vector2D], line:Line2D) -> list[Vector2D]:
+        """get points clipped by a line
 
+        Args:
+            in_geion(side_class): cmp key class - XLessEqual,YLessEqual,XMoreEqual,YMoreEqual
+            points(list[Vector2D]): list of points
+            line(Line2D): line for clipping
+
+        Returns:
+            list[Vector2D]: a list contains the final points
+        """
+        new_points = []
         in_rectangle = []
-        for i in range(len(points)):
-            in_rectangle.append(in_region(points[i]))
+        for point in points:
+            in_rectangle.append(in_region(point))
         for i in range(len(points)):
             index_0 = i
             index_1 = i + 1
             if index_1 >= len(points):
                 index_1 = 0
 
-            p0 = points[index_0]
-            p1 = points[index_1]
+            p_0 = points[index_0]
+            p_1 = points[index_1]
 
             if in_rectangle[index_0]:
                 if in_rectangle[index_1]:
-                    new_points.append(p1)
+                    new_points.append(p_1)
                 else:
-                    c = line.intersection(line=Line2D(p1=p0, p2=p1))
+                    cuted = line.intersection(Line2D(p_0, p_1))
 
-                    if not c.is_valid():
-                        return
-                    new_points.push_back(c)
+                    if not cuted.is_valid():
+                        return new_points
+                    new_points.append(cuted)
             else:
                 if in_rectangle[index_1]:
-                    c = line.intersection(line=Line2D(p1=p0, p2=p1))
+                    cuted = line.intersection(Line2D(p_0, p_1))
 
-                    if not c.is_valid():
-                        return
+                    if not cuted.is_valid():
+                        return new_points
 
-                    new_points.push_back(c)
-                    new_points.push_back(p1)
+                    new_points.append(cuted)
+                    new_points.append(p_1)
         return new_points
 
-    """
-      \ brief make a logical print.
-      \ return print_able str
-    """
-
     def __repr__(self):
-        return "({})".format(self._vertices)
+        """represent the polygon as a string
+
+        Returns:
+            str: contains _vertices
+        """
+        return f"({self._vertices})"
 
 
-def test():
-    p = Polygon2D([Vector2D(0, 0), Vector2D(0, 4), Vector2D(4, 4), Vector2D(4, 0)])
-    v = [Vector2D(2, 2), Vector2D(5, 5)]
-    print(p)
-    print(p.isClockwise(), p.isCounterclockwise())
-    print(p.doubleSignedArea(), p.area())
-    print(p.getBoundingBox())
-    print(p.contains(v[0]), p.contains(v[1]))
-
-
-if __name__ == "__main__":
-    test()
+# def test():
+#     p = Polygon2D([Vector2D(0, 0), Vector2D(0, 4), Vector2D(4, 4), Vector2D(4, 0)])
+#     v = [Vector2D(2, 2), Vector2D(5, 5)]
+#     print(p)
+#     print(p.is_clockwise(), p.is_counter_clockwise())
+#     print(p.double_signed_area(), p.area())
+#     print(p.get_bounding_box())
+#     print(p.contains(v[0]), p.contains(v[1]))
