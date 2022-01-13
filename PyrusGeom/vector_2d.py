@@ -452,7 +452,11 @@ class Vector2D:
 
     """  __ operator section __"""
 
-    def __add__(self, other) -> Vector2D:
+    __hash__ = None
+    def __eq__(self, other: Vector2D) -> bool:
+        return isinstance(other,Vector2D) and self._x == other.x() and self._y == other.y()
+
+    def __add__(self, other: Vector2D) -> Vector2D:
         return Vector2D(self._x + other.x(), self._y + other.y())
 
     def __sub__(self, other: Vector2D) -> Vector2D:
