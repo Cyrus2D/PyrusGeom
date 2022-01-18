@@ -5,6 +5,7 @@
 from __future__ import annotations
 from typing import Union
 import math
+from PyrusGeom.math_values import EPSILON
 
 from PyrusGeom.vector_2d import Vector2D
 from PyrusGeom.angle_deg import AngleDeg
@@ -26,6 +27,13 @@ class Matrix2D:
         self.dytf dytf: the vertical translation factor.
 
     """
+    _m11:float
+    _m12:float
+    _dx:float
+    _m21:float
+    _m22:float
+    _dy:float
+
 
     def __init__(self, __11=1.0, __12=0.0, __21=0.0, __22=1.0, __x=0.0, __y=0.0):
         """This is the class init function and creates a matrix2d
@@ -122,6 +130,14 @@ class Matrix2D:
         """
         return self._dy
 
+    # def __members(self):
+    #     """get the matrix members
+
+    #     Returns:
+    #         object: (m11,m12,dx,m21,m22,dy)
+    #     """
+    #     return (self.m11(),self.m12(),self.dxtf(),self.m21(),self.m22(),self.dytf)
+
     def det(self) -> float:
         """get the matrix's determinant
 
@@ -136,13 +152,15 @@ class Matrix2D:
         Returns:
             bool: true if this matrix is invertible.else false.
         """
-        return math.fabs(self.det()) > 0.00000000001
+        return math.fabs(self.det()) > EPSILON
 
     def inverted(self) -> Matrix2D:
         """get the inverted matrix.
 
+        if the matrix isn't invertible return the defualt Matrix
+
         Returns:
-            Matrix2D: the inverted matrix object.
+            Matrix2D: if invertible return the inverted matrix object.
         """
         determinant = self.det()
         if determinant == 0.0:  # not invertible
@@ -154,7 +172,7 @@ class Matrix2D:
                         (self._m12 * self._dy - self._dx * self._m22) * dinv,
                         (self._dx * self._m21 - self._m11 * self._dy) * dinv)
 
-    def translate(self, dxtf:float, dytf:float):
+    def translate(self, dxtf: float, dytf: float):
         """moves the coordinate as the other matrix.
 
         SameAs:
@@ -163,15 +181,15 @@ class Matrix2D:
         Args:
             dxtf (float): move factor for the x axis.
             dytf (float): move factor for the y axis.
-        """    
+        """
         self._dx += dxtf
         self._dy += dytf
 
-    def scale(self, scale_x:float, scale_y:float):
+    def scale(self, scale_x: float, scale_y: float):
         """scales the coordinate.
 
         SameAs:
-            self = Matrix2D.make_scaling(scale_x,scale_y) * self   
+            self = Matrix2D.make_scaling(scale_x,scale_y) * self
 
         Args:
             scale_x (float): scaling factor for the x axis.
@@ -183,7 +201,6 @@ class Matrix2D:
         self._m21 *= scale_y
         self._m22 *= scale_y
         self._dy *= scale_y
-
 
     def rotate(self, angle: AngleDeg):
         """rotates the coordinate system
@@ -227,14 +244,15 @@ class Matrix2D:
             Vector2D : mapped vector object
         """
         if len(args) == 1:
-            vector = args[0]
-            return Vector2D(self._m11 * vector.x + self._m12 * vector.y + self._dx,
-                            self._m21 * vector.x + self._m22 * vector.y + self._dy)
+            vector:Vector2D = args[0]
+            return Vector2D(self._m11 * vector.x() + self._m12 * vector.y() + self._dx,
+                            self._m21 * vector.x() + self._m22 * vector.y() + self._dy)
         if len(args) == 2:
             return Vector2D(self._m11 * args[0] + self._m12 * args[1] + self._dx,
                             self._m21 * args[0] + self._m22 * args[1] + self._dy)
 
-        raise Exception('The input should must inclue a Vector2D or two float for xy')
+        raise Exception(
+            'The input should must inclue a Vector2D or two float for xy')
 
     def transform_vec(self, vector: Vector2D) -> Vector2D:
         """transform input vector with this matrix
@@ -251,7 +269,7 @@ class Matrix2D:
         return vector
 
     @staticmethod
-    def make_translation(dxtf:float, dytf:float) -> Matrix2D:
+    def make_translation(dxtf: float, dytf: float) -> Matrix2D:
         """create the translation matrix.
 
         Args:
@@ -264,7 +282,7 @@ class Matrix2D:
         return Matrix2D(1.0, 0.0, 0.0, 1.0, dxtf, dytf)
 
     @staticmethod
-    def make_scaling(scale_x:float, scale_y:float) -> Matrix2D:
+    def make_scaling(scale_x: float, scale_y: float) -> Matrix2D:
         """create the scaling matrix.
 
         Args:
@@ -290,7 +308,7 @@ class Matrix2D:
         ang_sin = angle.sin()
         return Matrix2D(ang_cos, -ang_sin, ang_sin, ang_cos, 0.0, 0.0)
 
-    def __imul__(self, other:Matrix2D):
+    def __imul__(self, other: Matrix2D):
         """multiplied by other matrix
 
         Args:
@@ -310,7 +328,7 @@ class Matrix2D:
         self._dx = tdx
         self._dy = tdy
 
-    def __mul__(self, other:Union[Matrix2D, Vector2D]) -> Union[Matrix2D, Vector2D]:
+    def __mul__(self, other: Union[Matrix2D, Vector2D]) -> Union[Matrix2D, Vector2D]:
         """multiplication operator of Matrix * Matrix OR
         multiplication(transformation) operator of Matrix x Vector.
 
@@ -320,12 +338,30 @@ class Matrix2D:
         Returns:
             Union[Matrix2D, Vector2D]: result matrix object or vector opject
         """
-        if isinstance(other,Vector2D):
+        if isinstance(other, Vector2D):
             return self.transform(other)
-        if isinstance(other,Matrix2D):
+        if isinstance(other, Matrix2D):
             mat_tmp = self
             return mat_tmp.__imul__(other)
         return self
+
+    # def __hash__(self):
+    #     return hash(self.__members())
+
+    def __eq__(self, other: Matrix2D) -> bool:
+        """__eq__ operator
+
+        Args:
+            other (Matrix2D): other matrix to compare
+
+        Returns:
+            bool: true if eq. else false
+        """
+
+        return self._m11 == other.m11() and self._m12 == other.m12() and\
+            self._m21 == other.m21() and self._m22 == other.m22() and\
+            self._dx == other.dytf() and self._dy == other.dytf()
+
 
     def __repr__(self):
         """represent the Matrix2D as a logical string
@@ -333,5 +369,4 @@ class Matrix2D:
         Returns:
             str: contains Matrix2D index
         """
-        return f"{{ [{self._m11}], [{self._m12}], [{self._dx}]\n \
-                [{self._m21}] , [{self._m22}] , [{self._dy}] }}"
+        return f"{[self._m11, self._m12, self._m21, self._m22, self._dx, self._dy]}"
