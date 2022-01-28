@@ -118,9 +118,9 @@ class TestCircle2D(TestCase):
         v2 = Vector2D(1, 0)
         v3 = Vector2D(0, 1)
         circle = Circle2D.circum_circle(v1, v2, v3)
-        self.assertEqual(circle.center().x(), 0)
-        self.assertEqual(circle.center().y(), 0)
-        self.assertEqual(circle.radius(), 1)
+        self.assertEqual(circle.center().x(), 0.5)
+        self.assertEqual(circle.center().y(), 0.5)
+        self.assertAlmostEqual(circle.radius(), 0.70710678)
 
     def test_circle_contains(self):
         v1 = Vector2D(0, 0)

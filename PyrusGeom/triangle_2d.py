@@ -3,6 +3,9 @@
   \ brief 2D triangle class File.
 """
 
+from __future__ import annotations
+from typing import Union
+
 # from segment_2d import Segment2D
 from PyrusGeom.region_2d import Region2D
 from PyrusGeom.ray_2d import Ray2D
@@ -105,7 +108,7 @@ class Triangle2D(Region2D):
      """
 
     def area(self):
-        return math.fabs((self._b - self._a).outerProduct(self._c - self._a)) * 0.5
+        return math.fabs((self._b - self._a).outer_product(self._c - self._a)) * 0.5
 
     """
          \ brief get a signed area. self method is equivalent to signed_area().
@@ -148,9 +151,9 @@ class Triangle2D(Region2D):
         rel2 = Vector2D(vector2d=self._b - point)
         rel3 = Vector2D(vector2d=self._c - point)
 
-        outer1 = rel1.outerProduct(rel2)
-        outer2 = rel2.outerProduct(rel3)
-        outer3 = rel3.outerProduct(rel1)
+        outer1 = rel1.outer_product(rel2)
+        outer2 = rel2.outer_product(rel3)
+        outer3 = rel3.outer_product(rel1)
 
         if (outer1 >= 0.0 and outer2 >= 0.0 and outer3 >= 0.0) or (outer1 <= 0.0 and outer2 <= 0.0 and outer3 <= 0.0):
             return True
@@ -345,17 +348,17 @@ class Triangle2D(Region2D):
         perpendicular_ab = Line2D.perpendicular_bisector(a, b)
         perpendicular_bc = Line2D.perpendicular_bisector(b, c)
 
-        sol = perpendicular_ab.intersection(line=perpendicular_bc)
+        sol = perpendicular_ab.intersection(perpendicular_bc)
 
         if not sol.is_valid():
             perpendicular_ca = Line2D.perpendicular_bisector(c, a)
 
-            sol = perpendicular_ab.intersection(line=perpendicular_ca)
+            sol = perpendicular_ab.intersection(perpendicular_ca)
 
             if sol.is_valid():
                 return sol
 
-            sol = perpendicular_bc.intersection(line=perpendicular_ca)
+            sol = perpendicular_bc.intersection(perpendicular_ca)
 
             if sol.is_valid():
                 return sol
@@ -363,15 +366,15 @@ class Triangle2D(Region2D):
         ab = b - a
         ca = c - a
 
-        tmp = ab.outerProduct(ca)
+        tmp = ab.outer_product(ca)
         if math.fabs(tmp) < 1.0e-10:  # The area of parallelogram is 0.
             return Vector2D.invalid()
 
         inv = 0.5 / tmp
         ab_len2 = ab.r2()
         ca_len2 = ca.r2()
-        xcc = inv * (ab_len2 * ca.y - ca_len2 * ab.y)
-        ycc = inv * (ab.x * ca_len2 - ca.x * ab_len2)
+        xcc = inv * (ab_len2 * ca.get_y() - ca_len2 * ab.get_y())
+        ycc = inv * (ab.get_x() * ca_len2 - ca.get_x() * ab_len2)
 
         return Vector2D(a.x() + xcc, a.y() + ycc)
 
@@ -406,9 +409,9 @@ class Triangle2D(Region2D):
         rel2 = Vector2D(b - point)
         rel3 = Vector2D(c - point)
 
-        outer1 = rel1.outerProduct(rel2)
-        outer2 = rel2.outerProduct(rel3)
-        outer3 = rel3.outerProduct(rel1)
+        outer1 = rel1.outer_product(rel2)
+        outer2 = rel2.outer_product(rel3)
+        outer3 = rel3.outer_product(rel1)
 
         if outer1 >= 0.0 and outer2 >= 0.0 and outer3 >= 0.0 or (outer1 <= 0.0 and outer2 <= 0.0 and outer3 <= 0.0):
             return True
