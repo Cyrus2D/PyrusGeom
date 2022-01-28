@@ -1,7 +1,7 @@
 """ circle_2d.py file
-    Circle2D : class name
-    Class attributes : _center, _radius, _is_valid
-    TODO: add eq hash 
+    Circle2D: class name
+    Class attributes: _center, _radius, _is_valid
+    TODO: add eq hash
 
 """
 from __future__ import annotations
@@ -89,10 +89,11 @@ class Circle2D:
         """
         return self._center
 
-    def radius(self):
-        """
-        brief get the radius value
-        @return radius value
+    def radius(self) -> float:
+        """get the radius value
+
+        Returns:
+            float: radius value
         """
         return self._radius
 
