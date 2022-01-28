@@ -1,6 +1,7 @@
 """ circle_2d.py file
     Circle2D : class name
-    Class attributes : _center, _radius
+    Class attributes : _center, _radius, _is_valid
+    TODO: add eq hash 
 
 """
 from __future__ import annotations
@@ -308,7 +309,7 @@ class Circle2D:
 
 def quadratic_f(qf_a: float, qf_b: float, qf_c: float) -> list[Vector2D]:
     """solve quadratic equation
-
+    TODO: clean up this quadratic solver function
     Args:
         qf_a (float): formula constant A
         qf_b (float): formula constant B
