@@ -148,7 +148,7 @@ class Polygon2D(Region2D):
         elif len(args[0]) > 0:
             self._vertices = args[0].copy()
         else:
-            self._vertices = args
+            self._vertices = args # TODO:Check this for object init change
 
     def clear(self) -> None:
         """clear all data.

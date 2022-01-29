@@ -35,7 +35,7 @@ class Circle2D:
             center (Vector2D, optional): center point. Defaults to Vector2D().
             radius (float, optional): a non-negetive radius value. Defaults to 0.0.
         """
-        self._center: Vector2D = center
+        self._center: Vector2D = Vector2D(center)
         self._radius: float = radius
         if radius < 0.0:
             self._radius = 0.0
@@ -48,7 +48,7 @@ class Circle2D:
             center (Vector2D): center point
             radius (float): radius value
         """
-        self._center = center
+        self._center = Vector2D(center)
         self._radius = radius
         if radius < 0.0:
             self._radius = 0.0
