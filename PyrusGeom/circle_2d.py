@@ -294,7 +294,7 @@ class Circle2D:
         """represent Circle2D as a string
 
         Returns:
-            str: Circle2D's center and radius as strting
+            str: Circle2D's center and radius as string
         """
         return f"({self._center} , {self._radius})"
 

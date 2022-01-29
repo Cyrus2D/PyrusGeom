@@ -333,7 +333,7 @@ class AngleDeg:
         """represent AngleDeg as a string
 
         Returns:
-            str: AngleDeg's Degree as strting
+            str: AngleDeg's Degree as string
         """
         return str(self.degree())
 

@@ -273,7 +273,7 @@ class Line2D:
         """represent AngleDeg as a string
            aX + bY + c = 0
         Returns:
-            str: Line as strting
+            str: Line as string
         """
 
         if self._c == 0:
