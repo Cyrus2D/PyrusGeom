@@ -2,6 +2,7 @@
     Rect2D: class name
     Class attributes: _top_left, _size, _is_valid
     TODO: add test for RECT2D
+    TODO: add eq hash neq
     The model and naming rules are depend on soccer simulator environment
               -34.0
                 |

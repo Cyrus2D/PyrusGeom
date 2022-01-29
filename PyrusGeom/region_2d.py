@@ -1,28 +1,30 @@
-"""
-  file region_2d.h
-  brief abstract 2D region class File.
+""" region_2d.py file
+    Region2D: class name
+    Father Class
 """
 from PyrusGeom.vector_2d import Vector2D
 
-
 class Region2D:
+    """ handling Regions in SS2D
+        father class for other classes
+    """
     def __init__(self):
+        """accessible only from derived classes
         """
-        brief accessible only from derived classes
-        """
-        pass
 
-    def area(self):
-        """
-        brief get the area of this region
-        @return value of the area
-        """
-        pass
+    def area(self) -> float:
+        """get the area of this region
 
-    def contains(self, point: Vector2D):
+        Returns:
+            float: value of the area
         """
-        brief check if this region contains 'point'.
-        @param point considered point
-        @return true or false
+
+    def contains(self, point: Vector2D) -> bool:
+        """check if this region contains 'point'.
+
+        Args:
+            point (Vector2D): considered point
+
+        Returns:
+            bool: true or false
         """
-        pass
