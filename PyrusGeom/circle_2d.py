@@ -19,7 +19,7 @@ from PyrusGeom.math_values import PI, EPSILON
 class Circle2D:
     """ handling circles in SS2D
     Attributes:
-        _center: a Vector2D fpr center point
+        _center: a Vector2D for center point
         _radius: a non-negetive float for radius value
         _is_valid: a boolean for validation
     """

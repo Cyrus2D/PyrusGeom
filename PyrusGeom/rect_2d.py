@@ -1,8 +1,19 @@
-"""
-  file rect_2d.py
-  brief 2D rectangle region File.
+""" rect_2d.py file
+    Rect2D: class name
+    Class attributes: _top_left, _size, _is_valid
+    TODO: add test for RECT2D
+    The model and naming rules are depend on soccer simulator environment
+              -34.0
+                |
+                |
+    -52.5 ------+------- 52.5
+                |
+                |
+               34.0
 """
 from __future__ import annotations
+from typing import Union
+import math
 
 from PyrusGeom.size_2d import Size2D
 from PyrusGeom.segment_2d import Segment2D
@@ -10,47 +21,50 @@ from PyrusGeom.region_2d import Region2D
 from PyrusGeom.ray_2d import Ray2D
 from PyrusGeom.vector_2d import Vector2D
 from PyrusGeom.line_2d import Line2D
-from PyrusGeom.math_values import *
-import math
-
-"""
-    The model and naming rules are depend on soccer simulator environment
-          -34.0
-            |
-            |
--52.5 ------+------- 52.5
-            |
-            |
-          34.0
-"""
+from PyrusGeom.math_values import EPSILON
 
 
 class Rect2D(Region2D):
-    def __init__(self, *args) -> None:
-        """
-        @param args:
-            4 num
-                brief constructor
-                param left_x left x
-                param top_y top y
-                param length length (x-range)
-                param width width (y-range)
-            Vector, 2 num
-                brief constructor with variables
-                param top_left top left point
-                param length X range
-                param width Y range
-            Vector, Size
-                brief constructor with variables
-                param top_left top left point
-                param size XY range
-            2 Vector
-                brief constructor with 2 points.
-                param top_left top left vertex
-                param bottom_right bottom right vertex
+    """ handling rectangles in SS2D
+    Attributes:
+        _top_left: a Vector2D for top left corner point
+        _size: a Size2D for size value
+        _is_valid: a boolean for validation
+    """
 
-        Even if argument point has incorrect values,
-        the assigned values are normalized automatically.
+    def __init__(self, *args) -> None:
+        """This is the class init function for Rect2D.
+
+        Defualt:
+            bulid a Rect2D with args
+            Even if argument point has incorrect values,
+            the assigned values are normalized automatically.
+
+        Raises:
+            Exception: The input must be (4 float) or
+            (vector2d and 2 float) or (vector2d and size2d) or (2 vector2d) or (1 rect2d)
+
+        Args:
+            four:
+                four float:
+                    float: left x
+                    float: top y
+                    float: length (x-range)
+                    float: width (y-range)
+            three:
+                Vector and two float:
+                    Vector2D: top left point
+                    float: length X range
+                    float: width Y range
+            two:
+                Vector, Size:
+                    Vector2D: top left point
+                    Size2D: size XY range
+                two Vectors:
+                    Vector2D: top left vertex
+                    Vector2D: bottom right vertex
+            one:
+                Rect2D: just another rectangle
         """
         super().__init__()
         self._top_left: Vector2D = Vector2D()
@@ -64,16 +78,17 @@ class Rect2D(Region2D):
             self._top_left = Vector2D(args[0])
             self._size = Size2D(args[1], args[2])
             self._is_valid = True
-        elif len(args) == 2 and type(args[1]) == Vector2D:
+        elif len(args) == 2 and isinstance(args[1], Vector2D):
             self._top_left = Vector2D(args[0])
-            bottom_right: Vector2D = args[1]
-            top_left: Vector2D = args[0]
-            self._size = Size2D(bottom_right.x() - top_left.x(), bottom_right.y() - top_left.y())
+            bottom_right = Vector2D(args[1])
+            top_left = Vector2D(args[0])
+            self._size = Size2D(bottom_right.x() - top_left.x(),
+                                bottom_right.y() - top_left.y())
             if bottom_right.x() - top_left.x() < 0.0:
-                self._top_left._x = bottom_right.x()
+                self._top_left.set_x(bottom_right.x())
 
             if bottom_right.y() - top_left.y() < 0.0:
-                self._top_left._y = bottom_right.y()
+                self._top_left.set_y(bottom_right.y())
                 self._size = Size2D()
                 self._is_valid = True
             else:
@@ -84,478 +99,637 @@ class Rect2D(Region2D):
             self._top_left = Vector2D(args[0])
             self._size = args[1]
             self._is_valid = True
+        elif len(args) == 1 and isinstance(args[0], Rect2D):
+            self._top_left = args[0].top_left()
+            self._size = args[0].size()
+            self._is_valid = args[0].is_valid()
+        else:
+            raise Exception("The input must be (4 float) or \
+            (vector2d and 2 float) or (vector2d and size2d) or (2 vector2d) or (1 rect2d)")
 
     def assign(self, *args) -> Rect2D:
+        """assign values directly
+
+        Raises:
+            Exception: The input must be (4 float) or
+            (vector2d and 2 float) or (vector2d and size2d) or (2 vector2d) or (1 rect2d)
+
+        Args:
+            four:
+                four float:
+                    float: left x
+                    float: top y
+                    float: length (x-range)
+                    float: width (y-range)
+            three:
+                Vector and two float:
+                    Vector2D: top left point
+                    float: length X range
+                    float: width Y range
+            two:
+                Vector, Size:
+                    Vector2D: top left point
+                    Size2D: size XY range
+                two Vectors:
+                    Vector2D: top left vertex
+                    Vector2D: bottom right vertex
+            one:
+                Rect2D: just another rectangle
+
+        Returns:
+            Rect2D: return self
         """
-        brief assign values
-        @param args:
-            4 NUM
-                param left_x left x
-                param top_y top y
-                param length X range
-                param width Y range
-            Vector, 2 NUM
-                param top_left top left point
-                param length X range
-                param width Y range
-            Vector, Size
-                param top_left top left
-                param size XY range
-        """
-        super().__init__()
+
         if len(args) == 4:
             self._top_left.assign(args[0], args[1])
             self._size.assign(args[0], args[3])
         elif len(args) == 3:
             self._top_left = Vector2D(args[0])
             self._size.assign(args[1], args[2])
+        elif len(args) == 2 and isinstance(args[1], Vector2D):
+            self._top_left = Vector2D(args[0])
+            bottom_right = Vector2D(args[1])
+            top_left = Vector2D(args[0])
+            self._size = Size2D(bottom_right.x() - top_left.x(),
+                                bottom_right.y() - top_left.y())
+            if bottom_right.x() - top_left.x() < 0.0:
+                self._top_left.set_x(bottom_right.x())
+
+            if bottom_right.y() - top_left.y() < 0.0:
+                self._top_left.set_y(bottom_right.y())
+                self._size = Size2D()
+            else:
+                self._top_left = Vector2D()
+                self._size = Size2D()
         elif len(args) == 2:
             self._top_left = Vector2D(args[0])
             self._size = args[1]
+        elif len(args) == 1 and isinstance(args[0], Rect2D):
+            self._top_left = args[0].top_left()
+            self._size = args[0].size()
+        else:
+            raise Exception("The input must be (4 float) or \
+            (vector2d and 2 float) or (vector2d and size2d) or (2 vector2d)")
         return self
 
     def move_center(self, point: Vector2D) -> None:
-        """
-        brief move the rectangle.
+        """move the center of rectangle to move whole rect.
+
         the center point is set to the given position.
         the size is unchanged.
-        @param point center coordinates
+
+        Args:
+            point (Vector2D): center coordinates
         """
-        self._top_left.assign(point.x() - self._size.length() * 0.5, point.y() - self._size.width() * 0.5)
+        self._top_left.assign(point.x() - self._size.length()
+                              * 0.5, point.y() - self._size.width() * 0.5)
 
     def move_top_left(self, point: Vector2D) -> None:
-        """
-        brief move the rectangle.
+        """move the top-left of rectangle to move whole rect.
+
         the top-left corner is set to the given position.
         the size is unchanged.
-        @param point top-left corner
+
+        Args:
+            point (Vector2D): top-left corner
         """
         self._top_left = Vector2D(point)
 
     def move_bottom_right(self, point: Vector2D) -> None:
-        """
-        brief move the rectangle.
+        """move the bottom-right of rectangle to move whole rect.
+
         the bottom-right corner is set to the given position.
         the size is unchanged.
-        @param point bottom-right corner
-        """
-        self._top_left.assign(point.x() - self._size.length(), point.y() - self._size.width())
 
-    def move_left(self, x: float) -> None:
+        Args:
+            point (Vector2D): bottom-right corner
         """
-        brief move the rectangle.
+        self._top_left.assign(point.x() - self._size.length(),
+                              point.y() - self._size.width())
+
+    def move_left(self, left_x: float) -> None:
+        """move the rectangle by moving left side
+
         the left line is set to the given position.
         the size is unchanged.
-        @param x left value
-        """
-        self._top_left._x = x
 
-    def move_min_x(self, x: float) -> None:
+        Args:
+            left_x (float): left side value
         """
-        brief alias of moveLeft.
-        @param x left value
-        """
-        self.move_left(x)
+        self._top_left.set_x(left_x)
 
-    def move_right(self, x: float) -> None:
-        """
-        brief move the rectangle.
-        the right line is set to the given value.
+    def move_min_x(self, left_x: float) -> None:
+        """alias of moveLeft
+
+        move the rectangle by moving left side.
+        the left line is set to the given position.
         the size is unchanged.
-        @param x right value
-        """
-        self._top_left._x = x - self._size.length()
 
-    def move_max_x(self, x: float) -> None:
+        Args:
+            left_x (float): left value
         """
-        brief alias of moveRight.
-        @param x right value
-        """
-        self.move_right(x)
+        self.move_left(left_x)
 
-    def move_top(self, y: float) -> None:
+    def move_right(self, right_x: float) -> None:
+        """move the rectangle by moving left side(right given)
+
+        the left line is set to the alterd position.
+        the size is unchanged.
+
+        Args:
+            right_x (float): right value
         """
-        brief move the rectangle.
+        self._top_left.set_x(right_x - self._size.length())
+
+    def move_max_x(self, right_x: float) -> None:
+        """alias of moveRight.
+
+        move the rectangle by moving left side(right given).
+        the left line is set to the alterd position.
+        the size is unchanged.
+
+        Args:
+            right_x (float): right value
+        """
+        self.move_right(right_x)
+
+    def move_top(self, top_y: float) -> None:
+        """move the rectangle by moving top side
+
         the top line is set to the given value.
         the size is unchanged.
-        @param y top value
-        """
-        self._top_left._y = y
 
-    def move_min_y(self, y: float) -> None:
+        Args:
+            top_y (float): top value
         """
-        brief alias of moveTop.
-        @param y top value
-        """
-        self.move_top(y)
+        self._top_left.set_y(top_y)
 
-    def move_bottom(self, y: float) -> None:
-        """
-        brief move the rectangle.
+    def move_min_y(self, top_y: float) -> None:
+        """alias of moveTop.
+
+        move the rectangle by moving top side
         the top line is set to the given value.
         the size is unchanged.
-        @param y top value
-        """
-        self._top_left._y = y - self._size.width()
 
-    def move_max_y(self, y: float) -> None:
+        Args:
+            top_y (float): top value
         """
-        brief alias of moveTop.
-        @param y top value
+        self.move_top(top_y)
+
+    def move_bottom(self, bottom_y: float) -> None:
+        """move the rectangle by moving top side(bottom given)
+
+        the top line is set to the alterd value.
+        the size is unchanged.
+
+        Args:
+            bottom_y (float): bottom value
         """
-        self.move_bottom(y)
+        self._top_left.set_y(bottom_y - self._size.width())
+
+    def move_max_y(self, bottom_y: float) -> None:
+        """alias of move_bottom.
+
+        move the rectangle by moving top side(bottom given)
+        the top line is set to the alterd value.
+        the size is unchanged.
+
+        Args:
+            bottom_y (float): bottom value
+        """
+        self.move_bottom(bottom_y)
 
     def set_top_left(self, *args) -> Rect2D:
-        """
-        brief set the top-left corner of the rectangle.
-        @param args:
-            2 Num
-                param x x coordinate
-                param y y coordinate
-            Vector
-                param point coordinate
+        """set the top-left corner of the rectangle.
+
         the size may be changed, the bottom-right corner will never be changed.
+
+        Args:
+            two:
+                2 float:
+                    float: x coordinate
+                    float: y coordinate
+            one:
+                1 Vector:
+                Vector2D: point coordinate
+        Returns:
+            Rect2D: this rect
         """
-        x = 0.0
-        y = 0.0
+        point_x = 0.0
+        point_y = 0.0
         if len(args) == 1:
-            x = args[0].x()
-            y = args[0].y()
+            point_x = args[0].x()
+            point_y = args[0].y()
         elif len(args) == 2:
-            x = args[0]
-            y = args[1]
-        new_left = min(self.right(), x)
-        new_right = max(self.right(), x)
-        new_top = min(self.bottom(), y)
-        new_bottom = max(self.bottom(), y)
+            point_x = args[0]
+            point_y = args[1]
+        new_left = min(self.right(), point_x)
+        new_right = max(self.right(), point_x)
+        new_top = min(self.bottom(), point_y)
+        new_bottom = max(self.bottom(), point_y)
         return self.assign(new_left, new_top, new_right - new_left, new_bottom - new_top)
 
     def set_bottom_right(self, *args) -> Rect2D:
-        """
-        2 Num
-        brief set the bottom-right corner of the rectangle.
-        param x x coordinate
-        param y y coordinate
-        Vector
-        brief set the bottom-right corner of the rectangle.
-        param point coordinate
+        """set the bottom-right corner of the rectangle.
+
         the size may be changed, the top-left corner will never be changed.
+
+        Args:
+            two:
+                2 float:
+                    float: x coordinate
+                    float: y coordinate
+            one:
+                1 Vector:
+                Vector2D: point coordinate
+        Returns:
+            Rect2D: this rect
         """
-        x = 0.0
-        y = 0.0
+        point_x = 0.0
+        point_y = 0.0
         if len(args) == 1:
-            x = args[0].x()
-            y = args[0].y()
+            point_x = args[0].x()
+            point_y = args[0].y()
         elif len(args) == 2:
-            x = args[0]
-            y = args[1]
-        new_left = min(self.left(), x)
-        new_right = max(self.left(), x)
-        new_top = min(self.top(), y)
-        new_bottom = max(self.top(), y)
+            point_x = args[0]
+            point_y = args[1]
+        new_left = min(self.left(), point_x)
+        new_right = max(self.left(), point_x)
+        new_top = min(self.top(), point_y)
+        new_bottom = max(self.top(), point_y)
         return self.assign(new_left, new_top, new_right - new_left, new_bottom - new_top)
 
-    def set_left(self, x: float) -> None:
+    def set_left(self, left_x: float) -> None:
+        """set the left side of rectangle.
+
+        the size may be changed, the right side will never be changed.
+
+        Args:
+            left_x (float): left value
         """
-        brief set the left of rectangle.
-        the size may be changed, the right will never be changed.
-        @param x left value
-        """
-        new_left = min(self.right(), x)
-        new_right = max(self.right(), x)
-        self._top_left._x = new_left
+        new_left = min(self.right(), left_x)
+        new_right = max(self.right(), left_x)
+        self._top_left.set_x(new_left)
         self._size.set_length(new_right - new_left)
 
-    def set_min_x(self, x: float) -> None:
-        """
-        brief alias of setLeft.
-        @param x left value
-        """
-        self.set_left(x)
+    def set_min_x(self, left_x: float) -> None:
+        """alias of setLeft.
 
-    def set_right(self, x: float) -> None:
-        """
-        brief set the right of rectangle.
-        the size may be changed, the left will never be changed.
-        @param x right value
-        """
-        new_left = min(self.left(), x)
-        new_right = max(self.left(), x)
+        set the left side of rectangle.
+        the size may be changed, the right side will never be changed.
 
-        self._top_left._x = new_left
+        Args:
+            left_x (float): left value
+        """
+        self.set_left(left_x)
+
+    def set_right(self, right_x: float) -> None:
+        """set the right side of rectangle.
+
+        the size may be changed, the left side will never be changed.
+
+        Args:
+            right_x (float): right value
+        """
+        new_left = min(self.left(), right_x)
+        new_right = max(self.left(), right_x)
+
+        self._top_left.set_x(new_left)
         self._size.set_length(new_right - new_left)
 
-    def set_max_x(self, x: float) -> None:
-        """
-        brief alias of setRight.
-        @param x right value
-        """
-        self.set_right(x)
+    def set_max_x(self, right_x: float) -> None:
+        """ alias of setRight.
 
-    def set_top(self, y: float) -> None:
-        """
-        brief set the top of rectangle.
-        the size may be changed, the bottom will never be changed.
-        @param y top value
-        """
-        new_top = min(self.bottom(), y)
-        new_bottom = max(self.bottom(), y)
+        set the right side of rectangle.
+        the size may be changed, the left side will never be changed.
 
-        self._top_left._y = new_top
+        Args:
+            right_x (float): right value
+        """
+        self.set_right(right_x)
+
+    def set_top(self, top_y: float) -> None:
+        """set the top side of rectangle.
+
+        the size may be changed, the bottom side will never be changed.
+
+        Args:
+            top_y (float): top value
+        """
+        new_top = min(self.bottom(), top_y)
+        new_bottom = max(self.bottom(), top_y)
+
+        self._top_left.set_y(new_top)
         self._size.set_width(new_bottom - new_top)
 
-    def set_min_y(self, y: float) -> None:
-        """
-        brief alias of setTop.
-        @param y top value
-        """
-        self.set_top(y)
+    def set_min_y(self, top_y: float) -> None:
+        """alias of setTop.
 
-    def set_bottom(self, y: float) -> None:
-        """
-        brief set the bottom of rectangle.
-        the size may be changed, the top will never be changed.
-        @param y bottom value
-        """
-        new_top = min(self.top(), y)
-        new_bottom = max(self.top(), y)
+        set the top side of rectangle.
+        the size may be changed, the bottom side will never be changed.
 
-        self._top_left._y = new_top
+        Args:
+            top_y (float): top value
+        """
+        self.set_top(top_y)
+
+    def set_bottom(self, bottom_y: float) -> None:
+        """set the bottom side of rectangle.
+
+        the size may be changed, the top side will never be changed.
+
+        Args:
+            bottom_y (float): bottom value
+        """
+        new_top = min(self.top(), bottom_y)
+        new_bottom = max(self.top(), bottom_y)
+
+        self._top_left.set_y(new_top)
         self._size.set_width(new_bottom - new_top)
 
-    def set_max_y(self, y: float) -> None:
+    def set_max_y(self, bottom_y: float) -> None:
+        """alias of setBottom.
+
+        set the bottom side of rectangle.
+        the size may be changed, the top side will never be changed.
+
+        Args:
+            bottom_y (float): bottom value
         """
-        brief alias of setBottom.
-        @param y top value
-        """
-        self.set_bottom(y)
+        self.set_bottom(bottom_y)
 
     def set_length(self, length: float) -> None:
-        """
-        brief set a x-range
-        @param length range
+        """set a x-range - size x
+
+        Args:
+            length (float): length range
         """
         self._size.set_length(length)
 
     def set_width(self, width: float) -> None:
-        """
-        brief set a y-range
-        @param width range
+        """set a y-range - size y
+
+        Args:
+            length (float): width range
         """
         self._size.set_width(width)
 
     def set_size(self, *args) -> None:
-        """
-        brief set a size
-        @param args
-            2 NUM
-                param length range
-                param width range
-            1 Size
-                param size range
+        """set size of rect
+
+        Raises:
+            Exception: input must be two float or one size
+
+        Args:
+            two:
+                2 float:
+                    float: length range
+                    float: width range
+            one:
+                1 size:
+                    Size2D: size range
         """
         if len(args) == 2:
             self._size.assign(args[0], args[1])
-        elif len(args) == 1:
-            self._size = args[0]
+        elif len(args) == 1 and isinstance(args[0],Size2D):
+            self._size = Size2D(args[0].length(),args[0].width())
+        else:
+            raise Exception("input must be two float or one size")
 
     def is_valid(self) -> bool:
+        """check if self rectangle is valid or not.
+
+        Returns:
+            bool: True if the area of self rectangle is not 0. else False
         """
-        brief check if self rectangle is valid or not.
-        @return True if the area of self rectangle is not 0.
-        """
-        return self._size.is_valid()
+        self._is_valid = self._size.is_valid()
+        return self._is_valid
 
     def area(self) -> float:
-        """
-        brief get the area value of self rectangle.
-        @return value of the area
+        """get the area value of self rectangle.
+
+        Returns:
+            float: value of the area
         """
         return self._size.length() * self._size.width()
 
     def contains(self, point: Vector2D) -> bool:
-        """
-        brief check if point is within self region.
-        @param point considered point
-        @return True or False
+        """check if point is within self region.
+
+        Args:
+            point (Vector2D): considered point
+
+        Returns:
+            bool: True if it contains it. else False.
         """
         return self.left() <= point.x() <= self.right() and self.top() <= point.y() <= self.bottom()
 
-    def contains_weakly(self, point, error_thr) -> bool:
-        """
-        brief check if point is within self region with error threshold.
-        @param point considered point
-        @param error_thr error threshold
-        @return True or False
+    def contains_almost(self, point, error_thr) -> bool:
+        """check if point is within self region with error threshold.
+
+        Args:
+            point ([type]): considered point
+            error_thr ([type]): error threshold
+
+        Returns:
+            bool: True if it almost contains it. else False.
         """
         return self.left() - error_thr <= point.x <= self.right() + error_thr and \
-               self.top() - error_thr <= point.y <= self.bottom() + error_thr
+            self.top() - error_thr <= point.y <= self.bottom() + error_thr
 
     def left(self) -> float:
-        """
-        brief get the left x coordinate of self rectangle.
-        @return x coordinate value
+        """get the left x coordinate of this rectangle.
+
+        Returns:
+            float: x coordinate value
         """
         return self._top_left.x()
 
     def right(self) -> float:
-        """
-        brief get the right x coordinate of self rectangle.
-        @return x coordinate value
+        """get the right x coordinate of this rectangle.
+
+        Returns:
+            float: x coordinate value
         """
         return self.left() + self._size.length()
 
     def top(self) -> float:
-        """
-        brief get the top y coordinate of self rectangle.
-        @return y coordinate value
+        """get the top y coordinate of this rectangle.
+
+        Returns:
+            float: y coordinate value
         """
         return self._top_left.y()
 
     def bottom(self) -> float:
-        """
-        brief get the bottom y coordinate of self rectangle.
-        @return y coordinate value
+        """get the bottom y coordinate of this rectangle.
+
+        Returns:
+            float: y coordinate value
         """
         return self.top() + self._size.width()
 
     def min_x(self) -> float:
-        """
-        brief get minimum value of x coordinate of self rectangle
-        @return x coordinate value (equivalent to left())
+        """get minimum value of x coordinate of this rectangle
+
+        Returns:
+            float: x coordinate value (equivalent to left())
         """
         return self.left()
 
     def max_x(self) -> float:
-        """
-        brief get maximum value of x coordinate of self rectangle
-        @return x coordinate value (equivalent to right())
+        """get maximum value of x coordinate of this rectangle
+
+        Returns:
+            float: x coordinate value (equivalent to right())
         """
         return self.right()
 
     def min_y(self) -> float:
-        """
-        brief get minimum value of y coordinate of self rectangle
-        @return y coordinate value (equivalent to top())
+        """get minimum value of y coordinate of this rectangle
+
+        Returns:
+            float: y coordinate value (equivalent to top())
         """
         return self.top()
 
     def max_y(self) -> float:
-        """
-        brief get maximum value of y coordinate of self rectangle
-        @return y coordinate value (equivalent to bottom())
+        """get maximum value of y coordinate of this rectangle
+
+        Returns:
+            float: y coordinate value (equivalent to bottom())
         """
         return self.bottom()
 
     def size(self) -> Size2D:
+        """get the XY copy range of self rectangle
+
+        Returns:
+            Size2D: new size object
         """
-        brief get the XY range of self rectangle
-        @return size object
+        return Size2D(self._size.length(),self._size.width())
+
+    def size_(self) -> Size2D:
+        """get the OG XY range of self rectangle
+
+        Returns:
+            Size2D: original size object
         """
         return self._size
 
     def center(self) -> Vector2D:
-        """
-        brief get center point
-        @return coordinate value by vector object
+        """get center point of this rectangle
+
+        Returns:
+            Vector2D: coordinate value by vector object
         """
         return Vector2D((self.left() + self.right()) * 0.5,
                         (self.top() + self.bottom()) * 0.5)
 
     def top_left(self) -> Vector2D:
+        """get the top-left corner copy vector point
+
+        Returns:
+            Vector2D: coordinate value by vector object copy
         """
-        brief get the top-left corner point
-        @return coordinate value by vector object
+        return Vector2D(self._top_left)
+
+    def top_left_(self) -> Vector2D:
+        """get the og top-left corner vector point
+
+        Returns:
+            Vector2D: coordinate value by og vector object
         """
         return self._top_left
 
     def top_right(self) -> Vector2D:
-        """
-        brief get the top-right corner point
-        @return coordinate value by vector object
+        """get the top-right corner point
+
+        Returns:
+            Vector2D: coordinate value by vector object
         """
         return Vector2D(self.right(), self.top())
 
     def bottom_left(self) -> Vector2D:
-        """
-        brief get the bottom-left corner point
-        @return coordinate value by vector object
+        """get the bottom-left corner point
+
+        Returns:
+            Vector2D: coordinate value by vector object
         """
         return Vector2D(self.left(), self.bottom())
 
     def bottom_right(self) -> Vector2D:
-        """
-        brief get the bottom-right corner point
-        @return coordinate value by vector object
+        """get the bottom-right corner point
+
+        Returns:
+            Vector2D: coordinate value by vector object
         """
         return Vector2D(self.right(), self.bottom())
 
     def left_edge(self) -> Line2D:
-        """
-        brief get the left edge line
-        @return line object
+        """get the left edge line
+
+        Returns:
+            Line2D: line object
         """
         return Line2D(self.top_left(), self.bottom_left())
 
     def right_edge(self) -> Line2D:
-        """
-        brief get the right edge line
-        @return line object
+        """get the right edge line
+
+        Returns:
+            Line2D: line object
         """
         return Line2D(self.top_right(), self.bottom_right())
 
     def top_edge(self) -> Line2D:
-        """
-        brief get the top edge line
-        @return line object
+        """get the top edge line
+
+        Returns:
+            Line2D: line object
         """
         return Line2D(self.top_left(), self.top_right())
 
     def bottom_edge(self) -> Line2D:
-        """
-        brief get the bottom edge line
-        @return line object
+        """get the bottom edge line
+
+        Returns:
+            Line2D: line object
         """
         return Line2D(self.bottom_left(), self.bottom_right())
 
-    def intersection(self, *args) -> list[Vector2D]:
+    def intersection(self, other:Union[Line2D,Ray2D,Segment2D]) -> list[Vector2D]:
+        """calculate intersection point with line.
+        Raises:
+            Exception: Input must be Line/Ray/Segment
+        Args:
+            other (Union[Line2D,Ray2D,Segment2D]):
+                Line2D:  considered line.
+                Ray2D: considered ray line.
+                Segment2D: considered line segment.
+
+        TODO: check this full
+
+        Returns:
+            list[Vector2D]: intersection Points
         """
-        @param args
-            Line2D
-            brief calculate intersection point with line.
-            param line considered line.
-            param sol1 pointer to the 1st solution variable
-            param sol2 pointer to the 2nd solution variable
-            Ray2D
-            brief calculate intersection point with ray.
-            param ray considered ray line.
-            param sol1 pointer to the 1st solution variable
-            param sol2 pointer to the 2nd solution variable
-            Segment2D
-            brief calculate intersection point with line segment.
-            param segment considered line segment.
-            param sol1 pointer to the 1st solution variable
-            param sol2 pointer to the 2nd solution variable
-        @return intersection Point
-        """
-        if isinstance(args[0], Line2D):
-            line = args[0]
+        if isinstance(other, Line2D):
             n_sol = 0
             t_sol = [Vector2D(0, 0), Vector2D(0, 0)]
             left_x = self.left()
             right_x = self.right()
             top_y = self.top()
             bottom_y = self.bottom()
-            t_sol[n_sol] = self.left_edge().intersection(line)
+            t_sol[n_sol] = self.left_edge().intersection(other)
             if n_sol < 2 and t_sol[n_sol].is_valid() and top_y <= t_sol[n_sol].y() <= bottom_y:
                 n_sol += 1
-            t_sol[n_sol] = self.right_edge().intersection(line)
+            t_sol[n_sol] = self.right_edge().intersection(other)
             if n_sol < 2 and t_sol[n_sol].is_valid() and top_y <= t_sol[n_sol].y() <= bottom_y:
                 n_sol += 1
-            t_sol[n_sol] = self.top_edge().intersection(line)
+            t_sol[n_sol] = self.top_edge().intersection(other)
             if n_sol < 2 and (t_sol[n_sol]).is_valid() and left_x <= t_sol[n_sol].x() <= right_x:
                 n_sol += 1
-            t_sol[n_sol] = self.top_edge().intersection(line)
+            t_sol[n_sol] = self.top_edge().intersection(other)
             if n_sol < 2 and (t_sol[n_sol]).is_valid() and left_x <= t_sol[n_sol].x() <= right_x:
                 n_sol += 1
             if n_sol == 2 and math.fabs(t_sol[0].x() - t_sol[1].x()) < EPSILON and math.fabs(
@@ -568,34 +742,37 @@ class Rect2D(Region2D):
             else:
                 sol_list = [t_sol[0], t_sol[1]]
             return sol_list
-        elif isinstance(args[0], Ray2D):
-            ray = args[0]
-            n_sol = self.intersection(ray.line())
+        if isinstance(other, Ray2D):
+            n_sol = self.intersection(other.line())
 
-            if len(n_sol) > 1 and not ray.in_right_dir(n_sol[2], 1.0):
+            if len(n_sol) > 1 and not other.in_right_dir(n_sol[2], 1.0):
                 del n_sol[1]
 
-            if len(n_sol) > 0 and not ray.in_right_dir(n_sol[1], 1.0):
+            if len(n_sol) > 0 and not other.in_right_dir(n_sol[1], 1.0):
                 n_sol[0] = n_sol[1]
                 del n_sol[1]
             return n_sol
-        elif isinstance(args[0], Segment2D):
-            segment = args[0]
-            n_sol = self.intersection(segment.line())
-            if len(n_sol) > 1 and not segment.contains(n_sol[2]):
+        if isinstance(other, Segment2D):
+            n_sol = self.intersection(other.line())
+            if len(n_sol) > 1 and not other.contains(n_sol[2]):
                 del n_sol[1]
 
-            if len(n_sol) > 0 and not segment.contains(n_sol[1]):
+            if len(n_sol) > 0 and not other.contains(n_sol[1]):
                 n_sol[0] = n_sol[1]
                 del n_sol[1]
             return n_sol
+        raise Exception("Input must be Line/Ray/Segment")
 
-    def intersected(self, other):
-        """
-        brief get the intersected rectangle of self rectangle and the other rectangle.
+    def intersected(self, other:Rect2D) -> Rect2D:
+        """get the intersected rectangle of self rectangle and the other rectangle.
+
         If no intersection between rectangles,empty rectangle is returned.
-        @param other other rectangle
-        @return rectangle instance.
+
+        Args:
+            other (Rect2D): other rectangle
+
+        Returns:
+            [Rect2D]: rectangle instance
         """
         if not self.is_valid or not other.is_valid():
             self._top_left.assign(0.0, 0.0)
@@ -603,21 +780,26 @@ class Rect2D(Region2D):
 
         left = max(self.left(), other.left())
         top = max(self.top(), other.top())
-        w = min(self.right(), other.right()) - left
-        h = min(self.bottom(), other.bottom()) - top
+        width = min(self.right(), other.right()) - left
+        length = min(self.bottom(), other.bottom()) - top
 
-        if w <= 0.0 or h <= 0.0:
+        if width <= 0.0 or length <= 0.0:
             self._top_left.assign(0.0, 0.0)
             self._size.assign(0.0, 0.0)
 
         self._top_left.assign(left, top)
-        self._size.assign(w, h)
+        self._size.assign(width, length)
 
-    def united(self, other):
-        """
-        brief get the united rectangle of self rectangle and the other rectangle.
-        @param other other rectangle
-        @return rectangle instance.
+        return self
+
+    def united(self, other:Rect2D) -> Rect2D:
+        """get the united rectangle of self rectangle and the other rectangle.
+
+        Args:
+            other (Rect2D): other rectangle
+
+        Returns:
+            Rect2D: rectangle instance.
         """
         if not self.is_valid or not other.is_valid():
             self._top_left.assign(0.0, 0.0)
@@ -625,46 +807,60 @@ class Rect2D(Region2D):
 
         left = max(self.left(), other.left())
         top = max(self.top(), other.top())
-        w = min(self.right(), other.right()) - left
-        h = min(self.bottom(), other.bottom()) - top
+        width = min(self.right(), other.right()) - left
+        length = min(self.bottom(), other.bottom()) - top
 
-        if w <= 0.0 or h <= 0.0:
+        if width <= 0.0 or length <= 0.0:
             self._top_left.assign(0.0, 0.0)
             self._size.assign(0.0, 0.0)
 
         self._top_left.assign(left, top)
-        self._size.assign(w, h)
+        self._size.assign(width, length)
+
+        return self
 
     @staticmethod
-    def from_center(*args):
-        """
-        brief create rectangle with center point and size.
-        @param args
-            4 NUM
-                param center_x x value of center point of rectangle.
-                param center_y y value of center point of rectangle.
-                param length length(x-range) of rectangle.
-                param width width(y-range) of rectangle.
+    def from_center(*args)->Rect2D:
+        """create rectangle with center point and size.
+
+        Raises:
+            Exception: Input must be 4 float or one vector and two float
+
+        Args:
+            four:
+                4 float:
+                    float: x value of center point of rectangle.
+                    float: y value of center point of rectangle.
+                    float: length(x-range) of rectangle.
+                    float: width(y-range) of rectangle.
+            three:
+                1 vector and 2 float:
+                    Vector2D: center point of rectangle.
+                    float: length(x-range) of rectangle.
+                    float: width(y-range) of rectangle.
+
+        Returns:
+            Rect2D: created rectangle
         """
         if len(args) == 4:
             return Rect2D(args[0] - args[2] * 0.5, args[1] - args[3] * 0.5, args[2], args[3])
-        elif len(args) == 3:
-            return Rect2D(args[0] - args[2] * 0.5, args[1] - args[3] * 0.5)
+        if len(args) == 3:
+            return Rect2D(args[0] - args[1] * 0.5, args[0] - args[2] * 0.5, args[1], args[2])
+        raise Exception("Input must be 4 float or one vector and two float")
 
-    @staticmethod
-    def from_corners(*args):
-        """
-        brief create rectangle with 2 corner points. just call one of constructor.
-        """
-        return Rect2D(args)
+    def __repr__(self) -> str:
+        """represent Rect2D as a string
 
-    def __repr__(self):
+        Returns:
+            str: Rect2D's top_left corner and length and width as string
         """
-        brief make a logical print.
-        return print_able str
-        """
-        return "[len:{},wid:{}]".format(self._top_left, self._size)
+        return f"[topleft:{self._top_left},len:{self._size.length()},wid:{self._size.width()}]"
 
-    def to_str(self, ostr):
-        ostr += ' (rect {} {} {} {})'.format(round(self.left(), 3), round(self.top(), 3),
-                                             round(self.right(), 3), round(self.bottom(), 3))
+    def to_str(self, ostr) -> str:
+        """add rectangle to the ostr
+
+        Args:
+            ostr (str): str to add to it
+        """
+        ostr += f'(rect {round(self.left(), 3)} {round(self.top(), 3)} \
+            f{round(self.right(), 3)} {round(self.bottom(), 3)})'
