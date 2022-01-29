@@ -1,113 +1,134 @@
-"""
-
-  \ file ray_2d.py
-  \ brief 2D ray line class File.
-
+""" ray_2d.py file
+    Ray2D: class name
+    Class attributes:_origin,_drirection,_is_valid
 """
 from __future__ import annotations
+from typing import Union
+import math
+
 from PyrusGeom.line_2d import Line2D
 from PyrusGeom.vector_2d import Vector2D
 from PyrusGeom.angle_deg import AngleDeg
-from typing import Union
+from PyrusGeom.math_values import EPSILON
 
 
 class Ray2D:
-    def __init__(self, *args):
+    """ handling rays in SS2D
+    Attributes:
+        _origin: a Vector2D for the orgin point
+        _direction: an AngleDeg for the driection the ray goes
+        _is_valid = a boolean for validation
+    """
+
+    def __init__(self, origin: Vector2D, direction: Union[Vector2D, AngleDeg, float, int]):
+        """This is the class init function for Ray2D.
+
+        Defualt:
+            create a Ray started at origin point which has a angle at _direction
+
+        Args:
+            origin (Vector2D): origin point
+            direction (Union[Vector2D,AngleDeg, float, int]): direction angle
+
+        Raises:
+            Exception: The input must be (two Vector2D) or (Vector2D and AngleDeg)
         """
-        AngleDeg:
-        brief constructor with origin and direction else default constructor. all values are set to 0.
-        param __o origin point
-        param __d direction angle
-        Vector2D:
-        brief constructor with origin and direction else default constructor. all values are set to 0.
-        param __o origin point
-        param __d direction angle
-        """
-        self._origin: Vector2D = Vector2D()
+        self._origin: Vector2D = origin
         self._direction: AngleDeg = AngleDeg()
         self._is_valid = False
-        if len(args) == 2:
-            if isinstance(args[0], Vector2D) and isinstance(args[1], Vector2D):
-                self._origin = Vector2D(args[0])
-                self._direction = (args[1] - args[0]).th()
-                self._is_valid = True
-            elif isinstance(args[0], Vector2D) and isinstance(args[1], (AngleDeg, float, int)):
-                self._origin = Vector2D(args[0])
-                self._direction = AngleDeg(args[1])
-                self._is_valid = True
-
-        if not self._is_valid:
-            raise Exception('The input should be (two Vector2D) or (A Vector2D and an AngleDeg')
+        if isinstance(direction, Vector2D):
+            self._direction = (direction - origin).th()
+            self._is_valid = True
+        elif isinstance(direction, (AngleDeg, float, int)):
+            self._direction = AngleDeg(direction)
+            self._is_valid = True
+        elif not self._is_valid:
+            raise Exception(
+                'The input should be (two Vector2D) or (A Vector2D and an AngleDeg)')
 
     def origin(self) -> Vector2D:
-        """
-        brief get origin point
-        return const reference to the member variable
+        """get origin point copy
+
+        Returns:
+            Vector2D: origin point value
         """
         return Vector2D(self._origin)
 
     def dir(self) -> AngleDeg:
-        """
-        brief get the angle of this ray line
-        return const reference to the member variable
+        """get the angle copy of this ray line
+
+        Returns:
+            AngleDeg: direaction value
         """
         return AngleDeg(self._direction)
 
     def origin_(self) -> Vector2D:
-        """
-        brief get origin point
-        return const reference to the member variable
+        """get origin point reference
+
+        Returns:
+            Vector2D: og origin point
         """
         return self._origin
 
     def dir_(self) -> AngleDeg:
-        """
-        brief get the angle of this ray line
-        return const reference to the member variable
+        """get the reference direaction of this ray
+
+        Returns:
+            AngleDeg: og direaction
         """
         return self._direction
 
     def copy(self) -> Ray2D:
+        """create a copy of this ray
+
+        Returns:
+            Ray2D: copy of og ray
+        """
         return Ray2D(self.origin(), self.dir())
 
     def line(self) -> Line2D:
-        """
-        brief get line generated from this ray
-        return new line object
+        """get line generated from this ray
+
+        Returns:
+            Line2D: new line object
         """
         return Line2D(self._origin, self._direction)
 
-    def in_right_dir(self, point: Vector2D, thr=10.0) -> bool:
-        """
-        brief check whether p is on the direction of this Ray
-        param point considered point
-        param thr threshold angle buffer
-        return true or false
+    def in_right_dir(self, point: Vector2D, thr: float = 10.0) -> bool:
+        """check whether point is on the direction of this Ray
+
+        Args:
+            point (Vector2D): considered point
+            thr (float, optional): threshold angle buffer. Defaults to 10.0.
+
+        Returns:
+            bool: true if it is on the direction. else false.
         """
         return ((point - self._origin).th() - self._direction).abs() < thr
 
-    def intersection(self, *args) -> Vector2D:
+    def intersection(self, other: Union[Line2D, Ray2D]) -> Vector2D:
+        """get the intersection point with line or ray
+
+        Args:
+            other (Union[Line2D,Ray2D]): considered line
+
+        Returns:
+            Vector2D: intersection point. if it does not exist,
+                    the invalidated value vector is returned.
+        Raises:
+            Exception: The input must be Line2D or Ray2D
         """
-        Line2D
-         brief get the intersection point with 'line'
-         param other considered line
-         return intersection point. if it does not exist, the invalidated value vector is returned.
-        Ray2D
-         brief get the intersection point with 'ray'
-         param other considered line
-         return intersection point. if it does not exist, the invalidated value vector is returned.
-        """
-        if isinstance(args[0], Ray2D):
-            tmp_sol = self.line().intersection(args[0].line())
+        if isinstance(other, Ray2D):
+            tmp_sol = self.line().intersection(other.line())
             if not tmp_sol.is_valid():
                 return Vector2D.invalid()
 
-            if not self.in_right_dir(tmp_sol) or not args[0].in_right_dir(tmp_sol):
+            if not self.in_right_dir(tmp_sol) or not other.in_right_dir(tmp_sol):
                 return Vector2D.invalid()
 
             return tmp_sol
-        if isinstance(args[0], Line2D):
-            tmp_sol = self.line().intersection(args[0])
+        if isinstance(other, Line2D):
+            tmp_sol = self.line().intersection(other)
             if not tmp_sol.is_valid():
                 return Vector2D.invalid()
 
@@ -116,10 +137,23 @@ class Ray2D:
 
             return tmp_sol
 
-    def __repr__(self):
+        raise Exception("The input should be Line2D or Ray2D")
+
+    def __eq__(self, other: Ray2D) -> bool:
+        """operator == for Ray2D
+
+        Args:
+            other (Ray2D): right hand side argument
+        Returns:
+            bool: true if equal or difference is less than EPSILON. else false
         """
-        brief make a logical print.
-        return print_able str
-        origin point + direction Angle Deg
+        return (math.fabs(self._direction - other.dir_()) < EPSILON
+                and self._origin == other.origin_())
+
+    def __repr__(self) -> str:
+        """represent Ray2D as a string
+
+        Returns:
+            str: Ray2D's origin and direction as string
         """
         return str(self._origin) + " dir : " + str(self._direction)
