@@ -33,7 +33,7 @@ class Ray2D:
         Raises:
             Exception: The input must be (two Vector2D) or (Vector2D and AngleDeg)
         """
-        self._origin: Vector2D = origin
+        self._origin: Vector2D = Vector2D(origin)
         self._direction: AngleDeg = AngleDeg()
         self._is_valid = False
         if isinstance(direction, Vector2D):
