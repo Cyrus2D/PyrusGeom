@@ -328,6 +328,8 @@ class Matrix2D:
         self._dx = tdx
         self._dy = tdy
 
+        return self
+
     def __mul__(self, other: Union[Matrix2D, Vector2D]) -> Union[Matrix2D, Vector2D]:
         """multiplication operator of Matrix * Matrix OR
         multiplication(transformation) operator of Matrix x Vector.

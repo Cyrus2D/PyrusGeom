@@ -50,5 +50,6 @@ class TestMatrix2D(TestCase):
 
     def test_mul(self):
         mat_0 = Matrix2D()
+        mat_1 = mat_0 * mat_0
         # mat_1 = Matrix2D(2.0, 0.0, 2.0, 2.0, 2.0, 1.0)
-        self.assertEqual(mat_0* mat_0, Matrix2D())
+        self.assertEqual(mat_1, Matrix2D())
