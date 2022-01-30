@@ -25,7 +25,7 @@ class Circle2D:
     """
 
     def __init__(self, center: Vector2D = Vector2D(), radius: float = 0.0):
-        """This is the class init function for CircleD.
+        """This is the class init function for Circle2D.
 
         Defualt:
             create a zero area circle at (0,0) which has zero radius
