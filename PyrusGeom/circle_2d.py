@@ -304,8 +304,8 @@ class Circle2D:
         Args:
             ostr (str): str to add to it
         """
-        ostr += f"(circle {round(self.center().x(), 3)}" \
-            f"{round(self.center().y(), 3)} {round(self.radius(), 3)})"
+        ostr += f'(circle {round(self.center().x(), 3)} \
+            {round(self.center().y(), 3)} {round(self.radius(), 3)})'
 
 
 def quadratic_f(qf_a: float, qf_b: float, qf_c: float) -> list[Vector2D]:
