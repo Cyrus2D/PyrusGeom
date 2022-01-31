@@ -342,13 +342,13 @@ class Segment2D:
         """
 
         if isinstance(other, Segment2D):
-            tri_a0 = Triangle2D.double_signed_area(
+            tri_a0 = Triangle2D.double_signed_area_st(
                 self._origin, self._terminal, other.origin())
-            tri_a1 = Triangle2D.double_signed_area(
+            tri_a1 = Triangle2D.double_signed_area_st(
                 self._origin, self._terminal, other.terminal())
-            tri_b0 = Triangle2D.double_signed_area(
+            tri_b0 = Triangle2D.double_signed_area_st(
                 other.origin(), other.terminal(), self._origin)
-            tri_b1 = Triangle2D.double_signed_area(
+            tri_b1 = Triangle2D.double_signed_area_st(
                 other.origin(), other.terminal(), self._terminal)
 
             if tri_a0 * tri_a1 < 0.0 and tri_b0 * tri_b1 < 0.0:
@@ -401,19 +401,19 @@ class Segment2D:
                 terminal point of segment.
                 False if segments do not intersect or intersect on terminal point of segment.
         """
-        return (Triangle2D.double_signed_area(
+        return (Triangle2D.double_signed_area_st(
             self._origin,
             self._terminal,
             other.origin())
-            * Triangle2D.double_signed_area(
+            * Triangle2D.double_signed_area_st(
                 self._origin,
             self._terminal,
             other.terminal()) < 0.0) and (
-            Triangle2D.double_signed_area(
+            Triangle2D.double_signed_area_st(
                 other.origin(),
                 other.terminal(),
                 self._origin)
-            * Triangle2D.double_signed_area(
+            * Triangle2D.double_signed_area_st(
                 other.origin(),
                 other.terminal(),
                 self._terminal) < 0.0)
@@ -481,7 +481,7 @@ class Segment2D:
             tmp_vec = self._terminal - self._origin
             prod = tmp_vec.inner_product(other - self._origin)
             if 0.0 <= prod <= length * length:
-                return math.fabs(Triangle2D.double_signed_area(
+                return math.fabs(Triangle2D.double_signed_area_st(
                     self._origin,
                     self._terminal,
                     other) / length)
@@ -519,7 +519,7 @@ class Segment2D:
         Returns:
             float: True if point is on this segment. else False.
         """
-        return Triangle2D.double_signed_area(self._origin, self._terminal, point) == 0.0 \
+        return Triangle2D.double_signed_area_st(self._origin, self._terminal, point) == 0.0 \
             and self.check_intersects_on_line(point)
 
     def on_segment_weakly(self, point: Vector2D) -> bool:

@@ -87,7 +87,7 @@ def angle_sort_predicate(lhs: Vector2D, rhs: Vector2D, base: Vector2D = Vector2D
     Returns:
         bool: if counter clockwise return 1. else -1
     """
-    area = Triangle2D.double_signed_area(base, lhs, rhs)
+    area = Triangle2D.double_signed_area_st(base, lhs, rhs)
 
     if area < 0.0:
         return -1
@@ -113,7 +113,7 @@ def is_clockwise(point0: Vector2D, point1: Vector2D, point2: Vector2D) -> bool:
     Returns:
         bool: if clockwise return true. else false
     """
-    area = Triangle2D.double_signed_area(point0, point1, point2)
+    area = Triangle2D.double_signed_area_st(point0, point1, point2)
 
     return area < 0.0 or (area < EPSILON and point0.dist2(point1) > point0.dist2(point2))
 
@@ -337,7 +337,7 @@ class ConvexHull:
                 point_first:Vector2D = self._input_points[candidate]
                 point_second:Vector2D = self._input_points[i]
 
-                area = Triangle2D.double_signed_area(
+                area = Triangle2D.double_signed_area_st(
                     current_point, point_first, point_second)
 
                 if area < 0.0:

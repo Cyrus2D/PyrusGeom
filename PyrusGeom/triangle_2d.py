@@ -1,225 +1,289 @@
-"""
-  \ file triangle_2d.py
-  \ brief 2D triangle class File.
+""" triangle_2d.py file
+    Triangle2D: class name
+    Class attributes : _a,_b,_c
+    TODO: add test and reverse fix intersection
 """
 
 from __future__ import annotations
 from typing import Union
+import math
 
-# from segment_2d import Segment2D
+from PyrusGeom.segment_2d import Segment2D
 from PyrusGeom.region_2d import Region2D
 from PyrusGeom.ray_2d import Ray2D
 from PyrusGeom.vector_2d import Vector2D
 from PyrusGeom.angle_deg import AngleDeg
 from PyrusGeom.line_2d import Line2D
-from PyrusGeom.math_values import *
-import math
+from PyrusGeom.math_values import EPSILON
 
 
 class Triangle2D(Region2D):
-    """
-        Len = 3 / Vector2D
-      \ brief constructor with  OR def with (0,0) , (0,1) , (1,0)
-      \ param v1 first vertex point
-      \ param v2 second vertex point
-      \ param v3 third vertex point
-            Len = 2 / Segment2D
-      \ brief constructor with a segment and a point
-      \ param seg segment consist of triangle, and second vertex points
-      \ param v third vertex point
+    """handling tiiangles in SS2D
+
+    Args:
+        Region2D ([type]): created from Region2D class
+
+    Attributes:
+        _a: 1st vertex point
+        _b: 2nd vertex point
+        _c: 3rd vertex point
     """
 
-    def __init__(self,
-                 v1: Vector2D = None, v2: Vector2D = None, v3: Vector2D = None,
-                 seg=None, v: Vector2D = None):  # , **kwargs):):):
+    def __init__(self, *args) -> None:
+        """This is the class init function for Triangle2D
+
+        Args:
+            two:
+                1 segment 1 vector2D
+                (Segment2D, Vector2D)
+                Segment2D: segment consist of triangle
+                Vector2D: 3rd vertex point
+            three:
+                (float, float, float)
+                float: first vertex point
+                float: second vertex point
+                float: third vertex point
+
+        Raises:
+            Exception: The input must be (three Vector2D) or
+                       (one vector 2D and one segment)
+        """
+
         super().__init__()
-        if (v1 is not None
-                and v2 is not None
-                and v3 is not None):
-            self._a: Vector2D = v1.copy()
-            self._b: Vector2D = v2.copy()
-            self._c: Vector2D = v3.copy()
-        elif seg is not None and v is not None:
-            self._a = seg.origin().copy()
-            self._b = seg.terminal().copy()
-            self._c = v
-
-    """
-        Len = 3 / Vector2d
-      \ brief assign vertex points
-      \ param v1 first vertex point
-      \ param v2 second vertex point
-      \ param v3 third vertex point
-      \ return  reference to itself
-        Len = 2 / Segment2D
-      \ brief assign segment and vertex point
-      \ param seg segment consist of triangle, and second vertex points
-      \ param v third vertex point
-      \ return  reference to itself
-    """
-
-    def assign(self, *args):  # , **kwargs):):):
         if len(args) == 3:
-            self._a = args[0]
-            self._b = args[1]
-            self._c = args[2]
-        elif len(args) == 2:
-            seg = args[0]
-            self._a = seg.origin()
-            self._b = seg.terminal()
-            self._c = args[1]
+            self._a: Vector2D = Vector2D(args[0])
+            self._b: Vector2D = Vector2D(args[1])
+            self._c: Vector2D = Vector2D(args[2])
+        elif len(args) == 2 and isinstance(args[0], Segment2D):
+            self._a = Vector2D(args[0].origin_())
+            self._b = Vector2D(args[0].terminal_())
+            self._c = Vector2D(args[1])
+        else:
+            raise Exception("The input must be (three Vector2D) or\
+                            (one vector 2D and one segment)")
 
-    """
-      \ brief check if self triangle is valid or not.
-      \ return True if triangle is valid.
-    """
+    def assign(self, *args) -> Triangle2D:
+        """assign vertex points
 
-    def is_valid(self):
+        Args:
+            two:
+                1 segment 1 vector2D
+                (Segment2D, Vector2D)
+                Segment2D: segment consist of triangle
+                Vector2D: 3rd vertex point
+            three:
+                (float, float, float)
+                float: first vertex point
+                float: second vertex point
+                float: third vertex point
+
+        Raises:
+            Exception: The input must be (three Vector2D) or
+                       (one vector 2D and one segment)
+
+        Returns:
+            Triangle2D: reference to itself
+        """
+        if len(args) == 3:
+            self._a: Vector2D = Vector2D(args[0])
+            self._b: Vector2D = Vector2D(args[1])
+            self._c: Vector2D = Vector2D(args[2])
+        elif len(args) == 2 and isinstance(args[0], Segment2D):
+            self._a = Vector2D(args[0].origin_())
+            self._b = Vector2D(args[0].terminal_())
+            self._c = Vector2D(args[1])
+        else:
+            raise Exception("The input must be (three Vector2D) or\
+                            (one vector 2D and one segment)")
+        return self
+
+    def is_valid(self) -> bool:
+        """check if self triangle is valid or not.
+
+        Returns:
+            bool: True if triangle is valid. else False.
+        """
         return (self._a.is_valid() and self._b.is_valid() and self._c.is_valid() and
                 self._a != self._b and self._b != self._c and self._a != self._a)
 
-    """
-      \ brief get 1st point
-      \ return  reference to the member variable
-     """
+    def a(self) -> Vector2D:
+        """get 1st point copy
 
-    def a(self):
+        Returns:
+            Vector2D: a Vector2D with point values
+        """
+        return Vector2D(self._a)
+
+    def b(self) -> Vector2D:
+        """get 2nd point copy
+
+        Returns:
+            Vector2D: a Vector2D with point values
+        """
+        return Vector2D(self._b)
+
+    def c(self) -> Vector2D:
+        """get 3rd point copy
+
+        Returns:
+            Vector2D: a Vector2D with point values
+        """
+        return Vector2D(self._c)
+
+    def a_(self) -> Vector2D:
+        """get 1st point
+
+        Returns:
+            Vector2D: reference to the member variable
+        """
         return self._a
 
-    """
-      \ brief get 2nd point
-      \ return  reference to the member variable
-     """
+    def b_(self) -> Vector2D:
+        """get 2nd point
 
-    def b(self):
+        Returns:
+            Vector2D: reference to the member variable
+        """
         return self._b
 
-    """
-      \ brief get 3rd point
-      \ return  reference to the member variable
-     """
+    def c_(self) -> Vector2D:
+        """get 3rd point
 
-    def c(self):
+        Returns:
+            Vector2D: reference to the member variable
+        """
         return self._c
 
-    """
-      \ brief get the area of self region
-      \ return value of the area
-     """
+    def area(self) -> float:
+        """get the area of self region
 
-    def area(self):
+        Returns:
+            float: value of the area
+        """
         return math.fabs((self._b - self._a).outer_product(self._c - self._a)) * 0.5
 
-    """
-         \ brief get a signed area. self method is equivalent to signed_area().
-         \ return signed area value
-         If points a, b, are placed counterclockwise order, positive number.
-         If points a, b, are placed clockwise order, negative number.
-         If points a, b, are placed on a line, 0.
+    def signed_area(self) -> float:
+        """get a signed area.
+
+        method is equivalent to signed_area_st().
+
+        If points a, b, are placed counterclockwise order, positive number.
+        If points a, b, are placed clockwise order, negative number.
+        If points a, b, are placed on a line, 0.
+
+        Returns:
+            float: signed area value
         """
+        return Triangle2D.signed_area_st(self._a, self._b, self._c)
 
-    def signedArea(self):
-        return Triangle2D.signed_area(self._a, self._b, self._c)
+    def double_signed_area(self) -> float:
+        """get a double of signed area value.
 
-    """
-      \ brief get a double of signed area value. self method is equivalent to double_signed_area().
-      \ return double of signed area value
-      If points a, b, are placed counterclockwise order, positive number.
-      If points a, b, are placed clockwise order, negative number.
-      If points a, b, are placed on a line, 0.
-     """
+        method is equivalent to double_signed_area_st().
 
-    def doubleSignedArea(self):
-        return Triangle2D.double_signed_area(self._a, self._b, self._c)
+        If points a, b, are placed counterclockwise order, positive number.
+        If points a, b, are placed clockwise order, negative number.
+        If points a, b, are placed on a line, 0.
 
-    """
-      \ brief check if self triangle's vertices are placed counterclockwise order.
-      \ return checked result
-     """
+        Returns:
+            float: double of signed area value
+        """
+        return Triangle2D.double_signed_area_st(self._a, self._b, self._c)
 
-    def ccw(self):
+    def ccw(self) -> bool:
+        """check if self triangle's vertices are placed counterclockwise order.
+
+        Returns:
+            bool: True if counterclockwise. else False
+        """
         return Triangle2D.tri_ccw(self._a, self._b, self._c)
 
-    """
-      \ brief check if self triangle contains 'point'.
-      \ param point considered point
-      \ return True or False
-    """
+    def contains(self, point: Vector2D) -> bool:
+        """check if self triangle contains 'point'.
 
-    def contains(self, point: Vector2D):
-        rel1 = Vector2D(vector2d=self._a - point)
-        rel2 = Vector2D(vector2d=self._b - point)
-        rel3 = Vector2D(vector2d=self._c - point)
+        Args:
+            point (Vector2D): considered point
+
+        Returns:
+            bool: True if contains. else False.
+        """
+        rel1 = Vector2D(self._a - point)
+        rel2 = Vector2D(self._b - point)
+        rel3 = Vector2D(self._c - point)
 
         outer1 = rel1.outer_product(rel2)
         outer2 = rel2.outer_product(rel3)
         outer3 = rel3.outer_product(rel1)
 
-        if (outer1 >= 0.0 and outer2 >= 0.0 and outer3 >= 0.0) or (outer1 <= 0.0 and outer2 <= 0.0 and outer3 <= 0.0):
+        if (outer1 >= 0.0 and outer2 >= 0.0 and
+            outer3 >= 0.0) or (outer1 <= 0.0 and
+                               outer2 <= 0.0 and outer3 <= 0.0):
             return True
         return False
 
-    """
-      \ brief get the center of gravity(centroid)
-      \ return coordinates of gravity center
-     """
+    def centroid(self) -> Vector2D:
+        """get the center of gravity(centroid)
 
-    def centroid(self):
+        Returns:
+            Vector2D: coordinates of gravity center
+        """
         return Triangle2D.tri_centroid(self._a, self._b, self._c)
 
-    """
-      \ brief get the center of inscribed circle
-      \ return coordinates of inner center
-    """
+    def incenter(self) -> Vector2D:
+        """get the center of inscribed circle
 
-    def incenter(self):
+        Returns:
+            Vector2D: coordinates of inner center
+        """
         return Triangle2D.tri_incenter(self._a, self._b, self._c)
 
-    """
-      \ brief get the center of circumscribed circle
-      \ return coordinates of outer center
-    """
+    def circumcenter(self) -> Vector2D:
+        """get the center of circumscribed circle
 
-    def circumcenter(self):
+        Returns:
+            Vector2D: coordinates of outer center
+        """
         return Triangle2D.tri_circumcenter(self._a, self._b, self._c)
 
-    """
-      \ brief get the orthocenter
-      \ return coordinates of orthocenter
-    """
+    def orthocenter(self) -> Vector2D:
+        """get the orthocenter
 
-    def orthocenter(self):
+        Returns:
+            Vector2D: coordinates of orthocenter
+        """
         return Triangle2D.tri_orthocenter(self._a, self._b, self._c)
 
-    """
-        Line2D
-      \ brief calculate intersection point with line.
-      \ param line considered line.
-      \ return number of intersection + sol 1 + sol 2
-        Ray2D
-      \ brief calculate intersection point with ray.
-      \ param ray considered ray line.
-      \ return number of intersection + sol 1 + sol 2
-        Segment2D
-      \ brief calculate intersection point with line segment.
-      \ param segment considered line segment.
-      \ return number of intersection + sol 1 + sol 2
-    """
 
-    def intersection(self, line: Line2D = None, ray: Ray2D = None, segment=None):  # , **kwargs):):):
-        if line is not None:
+
+    def intersection(self, other: Union[Line2D, Ray2D, Segment2D]):
+        """
+        TODO: THIS IS BROKEN FIX IT PLS
+            Line2D
+        brief calculate intersection point with line.
+        param line considered line.
+        return number of intersection + sol 1 + sol 2
+            Ray2D
+        brief calculate intersection point with ray.
+        param ray considered ray line.
+        return number of intersection + sol 1 + sol 2
+            Segment2D
+        brief calculate intersection point with line segment.
+        param segment considered line segment.
+        return number of intersection + sol 1 + sol 2
+        """
+        if isinstance(other, Line2D):
             n_sol = 0
             t_sol = [Vector2D(), Vector2D()]
-            from segment_2d import Segment2D
-            t_sol[n_sol] = Segment2D(self._a, self._b).intersection(line=line)
+            # from segment_2d import Segment2D
+            t_sol[n_sol] = Segment2D(self._a, self._b).intersection(other)
             if n_sol < 2 and t_sol[n_sol].is_valid():
                 n_sol += 1
 
-            t_sol[n_sol] = Segment2D(self._b, self._c).intersection(line=line)
+            t_sol[n_sol] = Segment2D(self._b, self._c).intersection(other)
             if n_sol < 2 and t_sol[n_sol].is_valid():
                 n_sol += 1
 
-            t_sol[n_sol] = Segment2D(self._c, self._a).intersection(line=line)
+            t_sol[n_sol] = Segment2D(self._c, self._a).intersection(other)
             if n_sol < 2 and t_sol[n_sol].is_valid():
                 n_sol += 1
 
@@ -229,212 +293,224 @@ class Triangle2D(Region2D):
             sol_list = [n_sol, t_sol[0], t_sol[1]]
 
             return sol_list
-        elif ray is not None:
-            n_sol = Triangle2D.intersection(line=ray.line())
+        if isinstance(other, Ray2D):
+            n_sol = Triangle2D.intersection(other.line())
 
-            if n_sol[0] > 1 and not ray.in_right_dir(n_sol[1], 1.0):
+            if n_sol[0] > 1 and not other.in_right_dir(n_sol[1], 1.0):
                 n_sol[0] -= 1
 
-            if n_sol[0] > 0 and not ray.in_right_dir(n_sol[1], 1.0):
+            if n_sol[0] > 0 and not other.in_right_dir(n_sol[1], 1.0):
                 n_sol[1] = n_sol[2]
                 n_sol[0] -= 1
 
             return n_sol
 
-        elif segment is not None:
-            n_sol = Triangle2D.intersection(line=segment.line())
+        if isinstance(other, Segment2D):
+            n_sol = Triangle2D.intersection(other.line())
 
-            if n_sol[0] > 1 and not segment.contains(n_sol[2]):
+            if n_sol[0] > 1 and not other.contains(n_sol[2]):
                 n_sol[0] -= 1
 
-            if n_sol > 0 and not segment.contains(n_sol[1]):
+            if n_sol > 0 and not other.contains(n_sol[1]):
                 n_sol[1] = n_sol[2]
                 n_sol[0] -= 1
 
             return n_sol
-        else:
-            return [0]
+        return [0]
 
-    """  ----------------- static method  ----------------- """
-
-    """
-      \ brief get a double signed area value (== area of parallelogram)
-      \ param a 1st input point
-      \ param b 2nd input point
-      \ param c 3rd input point
-      \ return double singed area value.
-      If points a, b, are placed counterclockwise order, positive number.
-      If points a, b, are placed clockwise order, negative number.
-      If points a, b, are placed on a line, 0.
-    """
+    # static methods
 
     @staticmethod
-    def double_signed_area(a: Vector2D, b: Vector2D, c: Vector2D):
-        return ((a.x() - c.x()) * (b.y() - c.y())
-                + (b.x() - c.x()) * (c.y() - a.y()))
+    def double_signed_area_st(v_a: Vector2D, v_b: Vector2D, v_c: Vector2D) -> float:
+        """get a double signed area value (area of parallelogram)
 
-    """
-      \ brief get a signed area value
-      \ param a 1st input point
-      \ param b 2nd input point
-      \ param c 3rd input point
-      \ return signed area value
-      If points a, b, are placed counterclockwise order, positive number.
-      If points a, b, are placed clockwise order, negative number.
-      If points a, b, are placed on a line, 0.
-     """
+        If points a, b, are placed counterclockwise order, positive number.
+        If points a, b, are placed clockwise order, negative number.
+        If points a, b, are placed on a line, 0.
 
-    @staticmethod
-    def signed_area(a: Vector2D, b: Vector2D, c: Vector2D):
-        return Triangle2D.double_signed_area(a, b, c) * 0.5
+        Args:
+            v_a (Vector2D): triangle's 1st vertex point
+            v_b (Vector2D): triangle's 2nd vertex point
+            v_c (Vector2D): triangle's 3rd vertex point
 
-    """
-       \ brief check if input vertices are placed counterclockwise order.
-       \ param a 1st input point
-       \ param b 2nd input point
-       \ param c 3rd input point
-       \ return checked result
-      """
+        Returns:
+            float: double singed area value.
+        """
+        return ((v_a.x() - v_c.x()) * (v_b.y() - v_c.y())
+                + (v_b.x() - v_c.x()) * (v_c.y() - v_a.y()))
 
     @staticmethod
-    def tri_ccw(a: Vector2D, b: Vector2D, c: Vector2D):
-        return Triangle2D.double_signed_area(a, b, c) > 0.0
+    def signed_area_st(v_a: Vector2D, v_b: Vector2D, v_c: Vector2D) -> float:
+        """get a signed area value
 
-    """
-      \ brief get the center of gravity
-      \ param a triangle's 1st vertex
-      \ param b triangle's 2nd vertex
-      \ param c triangle's 3rd vertex
-      \ return coordinates of gravity center
+        If points a, b, are placed counterclockwise order, positive number.
+        If points a, b, are placed clockwise order, negative number.
+        If points a, b, are placed on a line, 0.
 
-      centroid = (a + b + c) / 3
-     """
+        Args:
+            v_a (Vector2D): triangle's 1st vertex point
+            v_b (Vector2D): triangle's 2nd vertex point
+            v_c (Vector2D): triangle's 3rd vertex point
 
-    @staticmethod
-    def tri_centroid(a: Vector2D, b: Vector2D, c: Vector2D):
-        return Vector2D(a).add(b).add(c) / 3.0
-
-    """
-      \ brief get the incenter point
-      \ param a triangle's 1st vertex
-      \ param b triangle's 2nd vertex
-      \ param c triangle's 3rd vertex
-      \ return coordinates of incenter
-    """
+        Returns:
+            float: signed area value
+        """
+        return Triangle2D.double_signed_area_st(v_a, v_b, v_c) * 0.5
 
     @staticmethod
-    def tri_incenter(a: Vector2D, b: Vector2D, c: Vector2D):
-        ab = b - a
-        ac = c - a
-        bisect_a = Line2D(origin=a, angle=AngleDeg.bisect(ab.th(), ac.th()))
+    def tri_ccw(v_a: Vector2D, v_b: Vector2D, v_c: Vector2D) -> bool:
+        """check if input vertices are placed counterclockwise order.
 
-        ba = a - b
-        bc = c - b
-        bisect_b = Line2D(origin=b, angle=AngleDeg.bisect(ba.th(), bc.th()))
+        Args:
+            v_a (Vector2D): triangle's 1st vertex point
+            v_b (Vector2D): triangle's 2nd vertex point
+            v_c (Vector2D): triangle's 3rd vertex point
+
+        Returns:
+            bool: True if counterclockwise. else False
+        """
+        return Triangle2D.double_signed_area_st(v_a, v_b, v_c) > 0.0
+
+
+    @staticmethod
+    def tri_centroid(v_a: Vector2D, v_b: Vector2D, v_c: Vector2D) -> Vector2D:
+        """ get the center of gravity
+
+        centroid = (a + b + c) / 3
+
+        Args:
+            v_a (Vector2D): triangle's 1st vertex point
+            v_b (Vector2D): triangle's 2nd vertex point
+            v_c (Vector2D): triangle's 3rd vertex point
+
+        Returns:
+            Vector2D: coordinates of gravity center
+        """
+        return Vector2D(v_a).add(v_b).add(v_c) / 3.0
+
+    @staticmethod
+    def tri_incenter(v_a: Vector2D, v_b: Vector2D, v_c: Vector2D) -> Vector2D:
+        """get the incenter point
+
+        Args:
+            v_a (Vector2D): triangle's 1st vertex point
+            v_b (Vector2D): triangle's 2nd vertex point
+            v_c (Vector2D): triangle's 3rd vertex point
+
+        Returns:
+            Vector2D: coordinates of incenter
+        """
+        a_b = v_b - v_a
+        a_c = v_c - v_a
+        bisect_a = Line2D(v_a, AngleDeg.bisect(a_b.th(), a_c.th()))
+
+        b_a = v_a - v_b
+        b_c = v_c - v_b
+        bisect_b = Line2D(v_b, AngleDeg.bisect(b_a.th(), b_c.th()))
 
         return bisect_a.intersection(bisect_b)
 
-    """
-      \ brief get the circumcenter point
-      \ param a triangle's 1st vertex
-      \ param b triangle's 2nd vertex
-      \ param c triangle's 3rd vertex
-      \ return coordinates of circumcenter
-    """
-
     @staticmethod
-    def tri_circumcenter(a: Vector2D, b: Vector2D, c: Vector2D):
+    def tri_circumcenter(v_a: Vector2D, v_b: Vector2D, v_c: Vector2D) -> Vector2D:
+        """get the circumcenter point
 
-        perpendicular_ab = Line2D.perpendicular_bisector(a, b)
-        perpendicular_bc = Line2D.perpendicular_bisector(b, c)
+        Args:
+            v_a (Vector2D): triangle's 1st vertex point
+            v_b (Vector2D): triangle's 2nd vertex point
+            v_c (Vector2D): triangle's 3rd vertex point
+
+        Returns:
+            Vector2D: coordinates of circumcenter
+        """
+        perpendicular_ab = Line2D.perpendicular_bisector(v_a, v_b)
+        perpendicular_bc = Line2D.perpendicular_bisector(v_b, v_c)
 
         sol = perpendicular_ab.intersection(perpendicular_bc)
 
         if not sol.is_valid():
-            perpendicular_ca = Line2D.perpendicular_bisector(c, a)
-
+            perpendicular_ca = Line2D.perpendicular_bisector(v_c, v_a)
             sol = perpendicular_ab.intersection(perpendicular_ca)
 
             if sol.is_valid():
                 return sol
 
             sol = perpendicular_bc.intersection(perpendicular_ca)
-
             if sol.is_valid():
                 return sol
 
-        ab = b - a
-        ca = c - a
+        a_b = v_b - v_a
+        c_a = v_c - v_a
 
-        tmp = ab.outer_product(ca)
+        tmp = a_b.outer_product(c_a)
         if math.fabs(tmp) < 1.0e-10:  # The area of parallelogram is 0.
             return Vector2D.invalid()
 
         inv = 0.5 / tmp
-        ab_len2 = ab.r2()
-        ca_len2 = ca.r2()
-        xcc = inv * (ab_len2 * ca.get_y() - ca_len2 * ab.get_y())
-        ycc = inv * (ab.get_x() * ca_len2 - ca.get_x() * ab_len2)
+        ab_len2 = a_b.r2()
+        ca_len2 = c_a.r2()
+        xcc = inv * (ab_len2 * c_a.get_y() - ca_len2 * a_b.get_y())
+        ycc = inv * (a_b.get_x() * ca_len2 - c_a.get_x() * ab_len2)
 
-        return Vector2D(a.x() + xcc, a.y() + ycc)
-
-    """
-      \ brief get the orthocenter point
-      \ param a triangle's 1st vertex
-      \ param b triangle's 2nd vertex
-      \ param c triangle's 3rd vertex
-      \ return coordinates of orthocenter
-    
-      orthocenter = a + b + c - 2 * circumcenter
-    """
+        return Vector2D(v_a.x() + xcc, v_a.y() + ycc)
 
     @staticmethod
-    def tri_orthocenter(a: Vector2D, b: Vector2D, c: Vector2D):
-        perpend_a = Line2D(p1=b, p2=c).perpendicular(a)
-        perpend_b = Line2D(p1=c, p2=a).perpendicular(b)
-        return perpend_a.intersection(line=perpend_b)
+    def tri_orthocenter(v_a: Vector2D, v_b: Vector2D, v_c: Vector2D) -> Vector2D:
+        """get the orthocenter point
 
-    """
-      \ brief check if triangle(a,b,c) contains the point 'p'.
-      \ param a vertex1
-      \ param b vertex2
-      \ param c vertex3
-      \ param point checked point
-      \ return checked result
-    """
+        orthocenter = a + b + c - 2 * circumcenter
+
+        Args:
+            v_a (Vector2D): triangle's 1st vertex point
+            v_b (Vector2D): triangle's 2nd vertex point
+            v_c (Vector2D): triangle's 3rd vertex point
+
+        Returns:
+            Vector2D: coordinates of orthocenter
+        """
+        perpend_a = Line2D(v_b, v_c).perpendicular(v_a)
+        perpend_b = Line2D(v_c, v_a).perpendicular(v_b)
+        return perpend_a.intersection(perpend_b)
 
     @staticmethod
-    def tri_contains(a: Vector2D, b: Vector2D, c: Vector2D, point: Vector2D):
-        rel1 = Vector2D(a - point)
-        rel2 = Vector2D(b - point)
-        rel3 = Vector2D(c - point)
+    def tri_contains(v_a: Vector2D, v_b: Vector2D, v_c: Vector2D, point: Vector2D) -> bool:
+        """ check if triangle(a,b,c) contains the input point.
+
+        Args:
+            v_a (Vector2D): triangle's 1st vertex point
+            v_b (Vector2D): triangle's 2nd vertex point
+            v_c (Vector2D): triangle's 3rd vertex point
+            point (Vector2D): checked point
+
+        Returns:
+            bool: True if contains. else Fasle.
+        """
+        rel1 = Vector2D(v_a - point)
+        rel2 = Vector2D(v_b - point)
+        rel3 = Vector2D(v_c - point)
 
         outer1 = rel1.outer_product(rel2)
         outer2 = rel2.outer_product(rel3)
         outer3 = rel3.outer_product(rel1)
 
-        if outer1 >= 0.0 and outer2 >= 0.0 and outer3 >= 0.0 or (outer1 <= 0.0 and outer2 <= 0.0 and outer3 <= 0.0):
+        if (outer1 >= 0.0 and outer2 >= 0.0 and
+            outer3 >= 0.0) or (outer1 <= 0.0 and
+                               outer2 <= 0.0 and outer3 <= 0.0):
             return True
         return False
 
-    """
-      \ brief make a logical print.
-      \ return print_able str
-    """
+    def __repr__(self) -> str:
+        """represent Triangle2D as a string
 
-    def __repr__(self):
-        return "[{},{},{}]".format(self._a, self._b, self._c)
+        Returns:
+            str: Triangle2D's _a, _b and _c as string
+        """
+        return f"[{self._a},{self._b},{self._c}]"
 
-    def to_str(self, ostr):
-        ostr += ' (tri {} {} {} {} {} {})'.format(round(self.a().x(), 3), round(self.a().y(), 3),
-                                                  round(self.b().x(), 3), round(self.b().y(), 3),
-                                                  round(self.c().x(), 3), round(self.c().y(), 3))
+    def to_str(self, ostr: str) -> str:
+        """add triangle to the ostr
 
-
-def test():
-    tri = Triangle2D()
-    print(tri)
-
-
-if __name__ == "__main__":
-    test()
+        Args:
+            ostr (str): str to add to it
+        """
+        ostr += f'(tri {round(self.a().x(), 3)} {round(self.a().y(), 3)} {round(self.b().x(), 3)} \
+        {round(self.b().y(), 3)} {round(self.c().x(), 3)} {round(self.c().y(), 3)})'
