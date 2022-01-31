@@ -1,180 +1,204 @@
-"""
-  file sector_2d.py
-  brief 2D sector region File.
+""" sector_2d.py file
+    Sector2D: class name
+    Class attributes : _center,_min_r,_max_r,_start,_end,is_valid
+    TODO: add test and reverse
 """
 from __future__ import annotations
+import math
 from typing import Union
+
 from PyrusGeom.region_2d import Region2D
 from PyrusGeom.vector_2d import Vector2D
 from PyrusGeom.angle_deg import AngleDeg
-from PyrusGeom.math_values import *
+from PyrusGeom.math_values import EPSILON, PI
 
 
 class Sector2D(Region2D):
-    def __init__(self, c: Vector2D, min_r: float, max_r: float, start: AngleDeg, end: AngleDeg) -> None:
-        """
-        brief constructor with all variables
-        @param c center point
-        @param min_r smaller radius
-        @param max_r bigger radius
-        @param start start angle(turn clockwise)
-        @param end end angle(turn clockwise)
+    """handling Sectors in SS2D
+
+    Args:
+        Region2D ([type]): created from Region2D class
+
+    Attributes:
+        _center: center point
+        _min_r: smaller radius
+        _max_r: bigger radius
+        _start: start angle(turn clockwise)
+        _end: end angle(turn clockwise)
+        is_valid: is it valid or not
+    """
+
+    def __init__(self, center: Vector2D, min_r: float, max_r: float,
+                 start: Union[AngleDeg, float], end: Union[AngleDeg, float]) -> None:
+        """This is the class init function for sector.
+
+        constructor with all variables
+
+        Args:
+            center (Vector2D): center point
+            min_r (float): smaller radius
+            max_r (float): bigger radius
+            start (Union[AngleDeg, float]): start angle(turn clockwise)
+            end (Union[AngleDeg, float]): end angle(turn clockwise)
         """
         super().__init__()
 
-        self._center = c
-        if min_r < 0.0:
-            self._min_r = 0.0
-        else:
-            self._min_r = min_r
-        if min_r > max_r:
-            self._max_r = self._min_r
-        else:
-            self._max_r = max_r
-        self._start = start
-        self._end = end
+        self._center = Vector2D(center)
+        self._min_r = min(0.0, min_r)
+        self._max_r = max(min_r, max_r)
+        self._start = AngleDeg(start)
+        self._end = AngleDeg(end)
         self.is_valid = True
 
-    def assign(self, c: Vector2D, min_r: float, max_r: float, start: AngleDeg, end: AngleDeg) -> None:
-        """
-        brief assign new value
-        param c center point
-        param min_r smaller radius
-        param max_r bigger radius
-        param start start angle(turn clockwise)
-        param end end angle(turn clockwise)
-        """
-        if type(end) != AngleDeg:
-            end = AngleDeg(end)
-        if type(start) != AngleDeg:
-            start = AngleDeg(start)
+    def assign(self, center: Vector2D, min_r: float, max_r: float,
+               start: Union[AngleDeg, float], end: Union[AngleDeg, float]) -> None:
+        """assign new value
 
-        self._center = c
-        if min_r < 0.0:
-            self._min_r = 0.0
-        else:
-            self._min_r = min_r
-        if min_r > max_r:
-            self._max_r = self._min_r
-        else:
-            self._max_r = max_r
-        self._start = start
-        self._end = end
+        Args:
+            center (Vector2D): center point
+            min_r (float): smaller radius
+            max_r (float): bigger radius
+            start (Union[AngleDeg, float]): start angle(turn clockwise)
+            end (Union[AngleDeg, float]): end angle(turn clockwise)
+        """
+        self._center = Vector2D(center)
+        self._min_r = min(0.0, min_r)
+        self._max_r = max(min_r, max_r)
+        self._start = AngleDeg(start)
+        self._end = AngleDeg(end)
 
     def center(self) -> Vector2D:
-        """
-        brief get the center point
-        @return  reference to the member variable
+        """get the center point copy
+
+        Returns:
+            Vector2D: a Vector2D with center point values
         """
         return Vector2D(self._center)
 
     def center_(self) -> Vector2D:
-        """
-        brief get the center point
-        @return  reference to the member variable
+        """get the center point
+
+        Returns:
+            Vector2D: reference to the og member variable
         """
         return self._center
 
     def radius_min(self) -> float:
-        """
-        brief get the small side radius
-        @return  reference to the member variable
+        """get the small side radius
+
+        Returns:
+            float: the small side radius
         """
         return self._min_r
 
     def radius_max(self) -> float:
-        """
-        brief get the big side radius
-        @return  reference to the member variable
+        """get the big side radius
+
+        Returns:
+            float: the big side radius
         """
         return self._min_r
 
     def angle_left_start(self) -> AngleDeg:
-        """
-        brief get the left start angle
-        @return  reference to the member variable
+        """get the left start angle copy
+
+        Returns:
+            AngleDeg: an AngleDeg with start values
         """
         return AngleDeg(self._start)
 
-    def angle_right_end(self) -> AngleDeg:
-        """
-        brief get the right end angle
-        @return  reference to the member variable
-        """
-        return AngleDeg(self._end)
-
     def angle_left_start_(self) -> AngleDeg:
-        """
-        brief get the left start angle
-        @return  reference to the member variable
+        """get the left start angle
+
+        Returns:
+            AngleDeg: reference to the og member variable
         """
         return self._start
 
-    def angle_right_end_(self) -> AngleDeg:
+    def angle_right_end(self) -> AngleDeg:
+        """get the right end angle copy
+
+        Returns:
+            AngleDeg: an AngleDeg with start values
         """
-        brief get the right end angle
-        @return  reference to the member variable
+        return AngleDeg(self._end)
+
+    def angle_right_end_(self) -> AngleDeg:
+        """get the right end angle
+
+        Returns:
+            AngleDeg: reference to the og member variable
         """
         return self._end
 
-    def area(self):
+    def area(self) -> float:
+        """calculate the area of this sector
+
+        Returns:
+            float: the value of area
         """
-        brief calculate the area of self region
-        @return the value of area
-        """
-        pass
+        circle_area = self._max_r * self._max_r * PI - self._min_r * self._min_r * PI
+        div = (self._end - self._start).degree_()
+        if div < 0.0:
+            div += 360.0
+        return circle_area * div / 360.0
 
     def contains(self, point: Vector2D) -> bool:
-        """
-        brief check if point is within self region
-        param point considered point
-        @return True or False
+        """check if point is within this sector
+
+        Args:
+            point (Vector2D): considered point
+
+        Returns:
+            bool: True if contains. else False.
         """
         rel = point - self._center
-        d2 = rel.r2()
-        return (self._min_r * self._min_r <= d2 <= self._max_r * self._max_r and rel.th().is_within(self._start,
-                                                                                                    self._end))
+        delta = rel.r2()
+        return (self._min_r * self._min_r <= delta <= self._max_r * self._max_r and
+                rel.th().is_within(self._start, self._end))
 
     def get_circumference_min(self) -> float:
+        """get smaller side circumference
+
+        Returns:
+            float: the length of circumference
         """
-        brief get smaller side circumference
-        @return the length of circumference
-        """
-        div = (self._end - self._start).degree()
+        div = (self._end - self._start).degree_()
         if div < 0.0:
             div += 360.0
         return (2.0 * self._min_r * PI) * (div / 360.0)
 
     def get_circumference_max(self) -> float:
+        """get bigger side circumference
+
+        Returns:
+            float: the length of circumference
         """
-        brief get bigger side circumference
-        @return the length of circumference
-        """
-        div = (self._end - self._start).degree()
+        div = (self._end - self._start).degree_()
         if div < 0.0:
             div += 360.0
-
         return (2.0 * self._max_r * PI) * (div / 360.0)
 
+    def __eq__(self, other: Sector2D) -> bool:
+        """operator == for Sector2D
+
+        Args:
+            other (Sector2D): right hand side argument
+        Returns:
+            bool: true if equal or difference is less than EPSILON. else false
+        """
+        return (self._center.equals_weakly(other.center_()) and
+            self._start == other.angle_left_start_() and
+            self._end == other.angle_right_end_() and
+            math.fabs(self._min_r - other.radius_min()) < EPSILON and
+            math.fabs(self._max_r - other.radius_max()) < EPSILON)
+        # return super().__eq__(other)
+
     def __repr__(self) -> str:
+        """represent Sector2D as a string
+
+        Returns:
+            str: Sector2D's _center,_start,_end,_min_r and _max_r as string
         """
-        brief make a logical print.
-        return print_able str
-        """
-        return f'[v({self._center}) a({self._start}, {self._end}) r({self._min_r}, {self._max_r})]'
-
-
-""" """
-
-
-def test():
-    a = Sector2D(Vector2D(0, 0), 0, 0, AngleDeg(0), AngleDeg(0))
-    b = a.center()
-    b.set_x(10)
-    print(a.center())
-
-    print(a)
-
-
-if __name__ == "__main__":
-    test()
+        return f'[v({self._center}) a({self._start}, {self._end}) \
+         r({self._min_r}, {self._max_r})]'
