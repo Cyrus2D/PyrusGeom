@@ -270,7 +270,7 @@ class Line2D:
                 < EPSILON and self._c == other.c())
 
     def __repr__(self) -> str:
-        """represent AngleDeg as a string
+        """represent Line2D as a string
            aX + bY + c = 0
         Returns:
             str: Line as string
