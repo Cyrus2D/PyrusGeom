@@ -1,3 +1,5 @@
+""" WildCard Import
+"""
 from PyrusGeom.angle_deg import *
 from PyrusGeom.vector_2d import *
 from PyrusGeom.line_2d import *
