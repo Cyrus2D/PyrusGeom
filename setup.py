@@ -17,12 +17,14 @@ setuptools.setup(
 
     url='https://github.com/Cyrus2D/PyrusGeom',
     project_urls={
-        "Issues" : "https://github.com/Cyrus2D/PyrusGeom/issues",
+        "Issues": "https://github.com/Cyrus2D/PyrusGeom/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU General Public License v3 (GPL-3)",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
+        "Development Status :: 3 - Alpha",
+
     ],
     license='LICENSE',
 
