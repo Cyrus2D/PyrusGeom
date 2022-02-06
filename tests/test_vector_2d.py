@@ -67,7 +67,8 @@ class Vector2DTest(unittest.TestCase):
 
     def test_add(self):
         a = Vector2D(0, 0)
-        a.add(Vector2D(2, 4))
+        b = Vector2D(2, 4)
+        a.add(b)
         self.assertEqual(a.x(), 2)
         self.assertEqual(a.y(), 4)
         a.add_x(1)
