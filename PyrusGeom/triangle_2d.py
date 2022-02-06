@@ -2,13 +2,14 @@
     Triangle2D: class name
     Class attributes : _a,_b,_c
     TODO: add test and reverse fix intersection
+    TODO: fix the circular import tri-segmant
 """
 
 from __future__ import annotations
-from typing import Union
+# from typing import Union
 import math
 
-from PyrusGeom.segment_2d import Segment2D
+# from PyrusGeom.segment_2d import Segment2D (removed most likely due to a circular import)
 from PyrusGeom.region_2d import Region2D
 from PyrusGeom.ray_2d import Ray2D
 from PyrusGeom.vector_2d import Vector2D
@@ -54,7 +55,7 @@ class Triangle2D(Region2D):
             self._a: Vector2D = Vector2D(args[0])
             self._b: Vector2D = Vector2D(args[1])
             self._c: Vector2D = Vector2D(args[2])
-        elif len(args) == 2 and isinstance(args[0], Segment2D):
+        elif len(args) == 2:  # and isinstance(args[0], Segment2D):
             self._a = Vector2D(args[0].origin_())
             self._b = Vector2D(args[0].terminal_())
             self._c = Vector2D(args[1])
@@ -88,7 +89,7 @@ class Triangle2D(Region2D):
             self._a: Vector2D = Vector2D(args[0])
             self._b: Vector2D = Vector2D(args[1])
             self._c: Vector2D = Vector2D(args[2])
-        elif len(args) == 2 and isinstance(args[0], Segment2D):
+        elif len(args) == 2:  # and isinstance(args[0], Segment2D):
             self._a = Vector2D(args[0].origin_())
             self._b = Vector2D(args[0].terminal_())
             self._c = Vector2D(args[1])
@@ -253,7 +254,7 @@ class Triangle2D(Region2D):
         """
         return Triangle2D.tri_orthocenter(self._a, self._b, self._c)
 
-    def intersection(self, other: Union[Line2D, Ray2D, Segment2D]) -> list:
+    def intersection(self, other): # Union[Line2D, Ray2D, Segment2D]) -> list:
         """
         TODO: Need to rewrite. fixed TriBug
             Line2D
@@ -272,7 +273,7 @@ class Triangle2D(Region2D):
         if isinstance(other, Line2D):
             n_sol = 0
             t_sol = [Vector2D(), Vector2D()]
-            # from segment_2d import Segment2D
+            from PyrusGeom.segment_2d import Segment2D
             t_sol[n_sol] = Segment2D(self._a, self._b).intersection(other)
             if n_sol < 2 and t_sol[n_sol].is_valid():
                 n_sol += 1
@@ -368,7 +369,6 @@ class Triangle2D(Region2D):
             bool: True if counterclockwise. else False
         """
         return Triangle2D.double_signed_area_st(v_a, v_b, v_c) > 0.0
-
 
     @staticmethod
     def tri_centroid(v_a: Vector2D, v_b: Vector2D, v_c: Vector2D) -> Vector2D:

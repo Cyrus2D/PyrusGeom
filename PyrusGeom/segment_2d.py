@@ -1,6 +1,8 @@
 """ segment_2d.py file
     Segment2D: class name
     Class attributes: _origin,_terminal
+    TODO: fix the circular import tri-segmant
+
 """
 from __future__ import annotations
 from typing import Union
