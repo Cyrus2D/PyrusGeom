@@ -253,11 +253,9 @@ class Triangle2D(Region2D):
         """
         return Triangle2D.tri_orthocenter(self._a, self._b, self._c)
 
-
-
-    def intersection(self, other: Union[Line2D, Ray2D, Segment2D]):
+    def intersection(self, other: Union[Line2D, Ray2D, Segment2D]) -> list:
         """
-        TODO: THIS IS BROKEN FIX IT PLS
+        TODO: Need to rewrite. fixed TriBug
             Line2D
         brief calculate intersection point with line.
         param line considered line.
@@ -294,7 +292,7 @@ class Triangle2D(Region2D):
 
             return sol_list
         if isinstance(other, Ray2D):
-            n_sol = Triangle2D.intersection(other.line())
+            n_sol = self.intersection(other.line())
 
             if n_sol[0] > 1 and not other.in_right_dir(n_sol[1], 1.0):
                 n_sol[0] -= 1
@@ -306,7 +304,7 @@ class Triangle2D(Region2D):
             return n_sol
 
         if isinstance(other, Segment2D):
-            n_sol = Triangle2D.intersection(other.line())
+            n_sol = self.intersection(other.line())
 
             if n_sol[0] > 1 and not other.contains(n_sol[2]):
                 n_sol[0] -= 1
