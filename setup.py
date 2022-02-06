@@ -21,7 +21,7 @@ setuptools.setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GNU General Public License v3 (GPL-3)",
         "Operating System :: OS Independent",
     ],
     license='LICENSE',
@@ -30,5 +30,5 @@ setuptools.setup(
     packages=setuptools.find_packages(where="PyrusGeom"),
 
     python_requires=">=3.6",
-    test_suite='PyrusGeomTest',
+    test_suite='tests',
 )

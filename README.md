@@ -8,11 +8,11 @@ PyrusGeom is a Python library for dealing with math and geometry in SS2D.
 
 Use the this  to install PyrusGeom.
 ```Bash
-pip install what
+pip install PyrusGeom
 ```
 or 
 ```sh
-git clone adrs?
+git clone https://github.com/Cyrus2D/PyrusGeom.git
 ./setup.py bulid
 ./setup.py install
 ```
