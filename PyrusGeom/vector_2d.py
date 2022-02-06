@@ -277,7 +277,7 @@ class Vector2D:
         Raises:
             Exception: The input should be a Vector2D or two numbers
         """
-        if len(args) == 1 and isinstance(args, Vector2D):
+        if len(args) == 1 and isinstance(args[0], Vector2D):
             self._x += args[0].x()
             self._y += args[0].y()
         elif len(args) == 2:
