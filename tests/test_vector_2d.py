@@ -152,6 +152,21 @@ class Vector2DTest(unittest.TestCase):
         self.assertEqual(a.x(), 3)
         self.assertEqual(a.y(), 0)
 
+    def test_kwargs(self):
+        a = Vector2D(y=1, x=2)
+        self.assertEqual(a.x(), 2)
+        self.assertEqual(a.y(), 1)
+
+    def test_kwargs_polar(self):
+        a = Vector2D(r=3, t=0)
+        self.assertEqual(a.x(), 3)
+        self.assertEqual(a.y(), 0)
+        self.assertEqual(a.th(), 0)
+        self.assertEqual(a.r(), 3)
+        a = Vector2D(r=10, t=45)
+        self.assertEqual(a.th(), 45)
+        self.assertEqual(a.r(), 10)
+
 
 if __name__ == '__main__':
     unittest.main()

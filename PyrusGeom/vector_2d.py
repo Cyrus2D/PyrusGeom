@@ -18,7 +18,7 @@ class Vector2D:
         _is_valid: a boolean for validation
     """
 
-    def __init__(self, *args) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """brief default constructor : create a Vector2D with XY value directly.
 
         Defualt:
@@ -40,7 +40,7 @@ class Vector2D:
             Exception: The input should be a Vector2D or two numbers or no input
         """
         self._is_valid = True
-        if len(args) == 0:
+        if len(args) == 0 and len(kwargs.keys()) == 0:
             self._x = 0
             self._y = 0
         elif len(args) == 1 and isinstance(args[0], Vector2D):
@@ -50,6 +50,12 @@ class Vector2D:
                                            (int, float)) and isinstance(args[1], (int, float)):
             self._x = args[0]
             self._y = args[1]
+        elif len(kwargs.keys()) != 0:
+            if 'x' in kwargs.keys() and 'y' in kwargs.keys():
+                self._x = kwargs['x']
+                self._y = kwargs['y']
+            elif 'r' in kwargs.keys() and 't' in kwargs.keys():
+                self.set_polar(kwargs['r'], kwargs['t'])
         else:
             raise Exception('The input should be a Vector2D or two numbers')
 
