@@ -22,6 +22,11 @@ class TestAngleDeg(TestCase):
         self.assertEqual(alpha_angle.degree(), 0)
         alpha_angle = AngleDeg(-360)
         self.assertEqual(alpha_angle.degree(), 0)
+        alpha_angle = AngleDeg(AngleDeg(10))
+        self.assertEqual(alpha_angle.degree(), 10)
+        alpha_angle = AngleDeg(af=-90)
+        self.assertEqual(alpha_angle.degree(), -90)
+
 
     def test_set_degree(self):
         alpha_angle = AngleDeg(20)

@@ -17,7 +17,7 @@ class Line2D:
         Line Formula: aX + bY + c = 0
     """
 
-    def __init__(self, *args) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """This is the class init function for Line2D
 
         Args:
@@ -48,32 +48,57 @@ class Line2D:
         self._b = 0.0
         self._c = 0.0
         self._is_valid = False
-        if len(args) == 3:
-            if isinstance(args[0], (float, int)) and \
-                    isinstance(args[1], (float, int)) and \
-                    isinstance(args[2], (float, int)):
-                self._a = args[0]
-                self._b = args[1]
-                self._c = args[2]
+        if len (kwargs) == 0:
+            if len(args) == 3:
+                if isinstance(args[0], (float, int)) and \
+                        isinstance(args[1], (float, int)) and \
+                        isinstance(args[2], (float, int)):
+                    self._a = args[0]
+                    self._b = args[1]
+                    self._c = args[2]
+                    self._is_valid = True
+            elif len(args) == 2:
+                if isinstance(args[0], Vector2D) and isinstance(args[1], (AngleDeg, float, int)):
+                    line_dir = args[1] if isinstance(
+                        args[1], AngleDeg) else AngleDeg(args[1])
+                    self._a = -line_dir.sin()
+                    self._b = line_dir.cos()
+                    self._c = -self._a * args[0].x() - self._b * args[0].y()
+                    self._is_valid = True
+                elif isinstance(args[0], Vector2D) and isinstance(args[1], Vector2D):
+                    self._a = -(args[1].y() - args[0].y())
+                    self._b = args[1].x() - args[0].x()
+                    self._c = -self._a * args[0].x() - self._b * args[0].y()
+                    self._is_valid = True
+            elif len(args) == 1:
+                if isinstance(args[0], Line2D):
+                    self._a = args[0].a()
+                    self._b = args[0].b()
+                    self._c = args[0].c()
+                    self._is_valid = True
+        else:
+            if {'a','b','c'} <= set(kwargs):
+                self._a = kwargs['a']
+                self._b = kwargs['b']
+                self._c = kwargs['c']
                 self._is_valid = True
-        elif len(args) == 2:
-            if isinstance(args[0], Vector2D) and isinstance(args[1], (AngleDeg, float, int)):
-                line_dir = args[1] if isinstance(
-                    args[1], AngleDeg) else AngleDeg(args[1])
+            elif {'p1','p2'} <= set(kwargs):
+                self._a = -(kwargs['p2'].y() - kwargs['p1'].y())
+                self._b = kwargs['p2'].x() - kwargs['p1'].x()
+                self._c = -self._a * kwargs['p1'].x() - self._b * kwargs['p1'].y()
+                self._is_valid = True
+            elif {'p','a'} <= set(kwargs):
+                line_dir = kwargs['a'] if isinstance(
+                        kwargs['a'], AngleDeg) else AngleDeg(kwargs['a'])
                 self._a = -line_dir.sin()
                 self._b = line_dir.cos()
-                self._c = -self._a * args[0].x() - self._b * args[0].y()
+                self._c = -self._a * kwargs['p'].x() - self._b * kwargs['p'].y()
                 self._is_valid = True
-            elif isinstance(args[0], Vector2D) and isinstance(args[1], Vector2D):
-                self._a = -(args[1].y() - args[0].y())
-                self._b = args[1].x() - args[0].x()
-                self._c = -self._a * args[0].x() - self._b * args[0].y()
+            elif 'l' in kwargs:
+                self._a = kwargs['l'].a()
+                self._b = kwargs['l'].b()
+                self._c = kwargs['l'].c()
                 self._is_valid = True
-        elif len(args) == 1:
-            if isinstance(args[0], Line2D):
-                self._a = args[0].a()
-                self._b = args[0].b()
-                self._c = args[0].c()
         if not self._is_valid:
             raise Exception('The input should be(2 vector2d) or (3 float) \
                             or (vector 2d and angle)')

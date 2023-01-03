@@ -12,7 +12,7 @@ class AngleDeg:
     Attributes:
         degree: a float for angles
     """
-    def __init__(self, *args) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """This is the class init function and normalizes the input degree.
 
         Defualt:
@@ -23,16 +23,20 @@ class AngleDeg:
                 one:
                     AngleDeg: create a new AngleDeg with normalized input AngleDeg
                     Degree: create an AngleDeg with normalized degree
+        KWArgs:
+            af (float): create an AngleDeg with normalized degree
         Raises:
             Exception: Input must be an AngleDeg or a Degree
         """
-        if len(args) == 0:
+        if len(args) == 0 and len(kwargs) == 0:
             self._degree = 0
         elif len(args) == 1:
             if isinstance(args[0], AngleDeg):
                 self._degree = args[0].degree()
             else:
                 self._degree = args[0]
+        elif 'af' in kwargs:
+            self._degree = kwargs['af']
         else:
             raise Exception('The input should be an AngleDeg or a Degree')
         self.normal()

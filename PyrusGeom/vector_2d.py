@@ -18,7 +18,7 @@ class Vector2D:
         _is_valid: a boolean for validation
     """
 
-    def __init__(self, *args) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """brief default constructor : create a Vector2D with XY value directly.
 
         Defualt:
@@ -36,22 +36,41 @@ class Vector2D:
                     point: a Vector2D to bulid from.
             None:
                 create a Vector2D at (0,0)
+
+        Kwargs:
+            x: a float for x
+            y: a float for y
+            r (Union[int, float]): vector's radius
+            a (Union[int, float, AngleDeg]): vector's angle
+
         Raises:
             Exception: The input should be a Vector2D or two numbers or no input
         """
         self._is_valid = True
-        if len(args) == 0:
-            self._x = 0
-            self._y = 0
-        elif len(args) == 1 and isinstance(args[0], Vector2D):
-            self._x = args[0].x()
-            self._y = args[0].y()
-        elif len(args) == 2 and isinstance(args[0],
-                                           (int, float)) and isinstance(args[1], (int, float)):
-            self._x = args[0]
-            self._y = args[1]
+        if len(kwargs.keys()) == 0:
+            if len(args) == 2 and isinstance(args[0],
+                                            (int, float)) and isinstance(args[1], (int, float)):
+                self._x = args[0]
+                self._y = args[1]
+            elif len(args) == 1 and isinstance(args[0], Vector2D):
+                self._x = args[0].x()
+                self._y = args[0].y()
+            elif len(args) == 0:
+                self._x = 0
+                self._y = 0
+            else:
+                raise Exception('The input should be a Vector2D or two numbers')
+        elif len(kwargs) == 2:
+            if 'x' in kwargs and 'y' in kwargs:
+                self._x = kwargs['x']
+                self._y = kwargs['y']
+            elif 'r' in kwargs and 'a' in kwargs:
+                self.set_polar(kwargs['r'], kwargs['a'])
+            else:
+                raise Exception('The input should be a Vector2D or two numbers')
         else:
             raise Exception('The input should be a Vector2D or two numbers')
+
 
     def x(self) -> float:
         """accessor to x
@@ -426,7 +445,9 @@ class Vector2D:
         Returns:
             Vector2D: new normalized vector
         """
-        return Vector2D(self._x, self._y).set_length(1)
+        vector = Vector2D(self._x, self._y)
+        vector.set_length(1)
+        return vector
 
     def inner_product(self, point: Vector2D) -> float:
         """get inner(dot) product with 'point'.

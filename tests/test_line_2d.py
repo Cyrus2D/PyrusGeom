@@ -78,3 +78,25 @@ class TestLine2D(TestCase):
     def test_perpendicular_bisector(self):
         line = Line2D.perpendicular_bisector(Vector2D(-5, 0), Vector2D(5, 0))
         self.assertEqual(line.get_x(5), 0)
+
+    def test_kwargs(self):
+        line = Line2D(p1=Vector2D(0, 0), p2=Vector2D(0, 10))
+        self.assertEqual(line.a(), -10)
+        self.assertEqual(line.b(), 0)
+        self.assertEqual(line.c(), 0)
+
+        line = Line2D(p=Vector2D(0, 0), a=90)
+        self.assertEqual(line.a(), -1)
+        self.assertTrue(abs(line.b()) < 0.01)
+        self.assertEqual(line.c(), 0)
+
+        line2 = Line2D(line)
+
+        self.assertEqual(line2.a(), -1)
+        self.assertTrue(abs(line2.b()) < 0.01)
+        self.assertEqual(line2.c(), 0)
+
+        line = Line2D(p=Vector2D(0, 0), a=AngleDeg(90))
+        self.assertEqual(line.a(), -1)
+        self.assertTrue(abs(line.b()) < 0.01)
+        self.assertEqual(line.c(), 0)
