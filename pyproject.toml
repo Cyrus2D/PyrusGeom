@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pyrusgeom"
-version = "0.0.9"
+version = "0.0.10"
 authors = [
   { name="Cyrus 2D Team", email="info@cyrus2d.com" },
 ]

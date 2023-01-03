@@ -530,10 +530,20 @@ class AngleDeg:
             Union[AngleDeg, float]: bisect angle
         """
         result = AngleDeg(left)
-        rel = AngleDeg(right - left)
+        rel = AngleDeg(AngleDeg(right) - result)
         diff = result.degree() - AngleDeg(right).degree()
         half_deg = rel.degree() * 0.5
         result += half_deg
         if (0.0 < diff < 180.0) or diff < -180.0:
             return result
         return result + 180.0
+
+    @staticmethod
+    def normalize_angle(dir: float):
+        if dir < -360 or dir > 360:
+            dir = dir % 360
+        if dir < -180:
+            dir += 360
+        if dir > 180:
+            dir -= 360
+        return dir
