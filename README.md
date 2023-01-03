@@ -6,15 +6,25 @@ PyrusGeom is a Python library for dealing with math and geometry in SS2D.
 
 # Installation
 
-Use the this  to install PyrusGeom.
+Use pip or build to install PyrusGeom.  
+x.x.x = release version  
+*test pypi* release:
 ```Bash
-pip install PyrusGeom
+pip install -i https://test.pypi.org/simple/ pyrusgeom==x.x.x
 ```
-or 
+*pypi* release:
+```Bash
+pip install pyrusgeom==x.x.x
+```
+download and use the released tar file:
+```Bash
+python -m pip install pyrusgeom-x.x.x.tar.gz
+```
+or use the git repository
 ```sh
 git clone https://github.com/Cyrus2D/PyrusGeom.git
-./setup.py build
-./setup.py install
+python -m build
+python -m pip install dist/pyrusgeom-x.x.x.tar.gz
 ```
 
 # Usage
