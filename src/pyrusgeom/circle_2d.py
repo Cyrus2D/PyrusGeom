@@ -99,7 +99,6 @@ class Circle2D:
 
     def intersection(self, other: Union[Line2D, Ray2D, Segment2D, Circle2D]) -> list[Vector2D]:
         """calculate the intersection with Line2D, Ray2D, Segment2D, Circle2D
-            TODO: CleanUp intersection need to fix quadratic_f returns
         Args:
             other (Union[Line2D, Ray2D, Segment2D, Circle2D]): considered line
                     or ray or segment or circle
@@ -120,13 +119,14 @@ class Circle2D:
                                      + math.pow(other.c() /
                                                 other.b() + self._center.y(), 2)
                                      - math.pow(self._radius, 2)))
-                sol_1 = n_sol[1]
-                sol_2 = n_sol[2]
-                if n_sol[0] > 0:
+
+                if len(n_sol):
                     sol_tmp_1 = -other.c() / other.b()
+                    sol_1 = n_sol[0]
+                    sol_2 = n_sol[1]
                     sol_list = [Vector2D(sol_1, sol_tmp_1),
                                 Vector2D(sol_2, sol_tmp_1)]
-                    if sol_1 == sol_2:
+                    if sol_list[0].equals_weakly(sol_list[1]):
                         del sol_list[1]
                 else:
                     sol_list = []
@@ -141,9 +141,9 @@ class Circle2D:
                 (self._center.y()) ** 2 - self._radius ** 2
 
             n_sol = quadratic_f(line_a, line_b, line_c)
-            sol_tmp_1 = n_sol[1]
-            sol_tmp_2 = n_sol[2]
-            if n_sol[0] > 0:
+            if len(n_sol):
+                sol_tmp_1 = n_sol[0]
+                sol_tmp_2 = n_sol[1]
                 sol_list = [Vector2D(other.get_x(sol_tmp_1), sol_tmp_1),
                             Vector2D(other.get_x(sol_tmp_2), sol_tmp_2)]
                 if sol_list[0].equals_weakly(sol_list[1]):
@@ -159,8 +159,7 @@ class Circle2D:
                 del sol_list[1]
 
             if len(sol_list) > 0 and not other.in_right_dir(sol_list[0], 1.0):
-                sol_list[0] = sol_list[1]
-                del sol_list[1]
+                del sol_list[0]
 
             return sol_list
 
@@ -174,6 +173,7 @@ class Circle2D:
                 del sol_list[0]
 
             return sol_list
+
         if isinstance(other, Circle2D):
             rel_x = other.center().x() - self._center.x()
             rel_y = other.center().y() - self._center.y()
@@ -308,29 +308,29 @@ class Circle2D:
             {round(self.center().y(), 3)} {round(self.radius(), 3)})'
 
 
-def quadratic_f(qf_a: float, qf_b: float, qf_c: float) -> list[Vector2D]:
+def quadratic_f(qf_a: float, qf_b: float, qf_c: float) -> list[float]:
     """solve quadratic equation
-    TODO: clean up this quadratic solver function
     Args:
         qf_a (float): formula constant A
         qf_b (float): formula constant B
         qf_c (float): formula constant C
 
     Returns:
-        list[Vector2D]: sol1 reference to the result variable, sol2 reference to the result variable
+        list[float]: sol1 reference to the result variable, sol2 reference to the result variable
     """
 
     delta = qf_b * qf_b - 4.0 * qf_a * qf_c
     sol1 = 0.0
     sol2 = 0.0
+    if qf_a == 0:
+        raise Exception('Dvided by zero in quadratic_f')
     if math.fabs(delta) < EPSILON:
         sol1 = -qf_b / (2.0 * qf_a)
-        ans = 1
+        return [sol1,sol1]
     elif delta < 0.0:
-        ans = 0
+        return []
     else:
         delta = math.sqrt(delta)
         sol1 = (-qf_b + delta) / (2.0 * qf_a)
         sol2 = (-qf_b - delta) / (2.0 * qf_a)
-        ans = 2
-    return [ans, sol1, sol2]
+        return [sol1, sol2]
