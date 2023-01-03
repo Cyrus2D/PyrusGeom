@@ -1,6 +1,6 @@
 from unittest import TestCase
-from PyrusGeom.segment_2d import Segment2D
-from PyrusGeom.vector_2d import Vector2D
+from pyrusgeom.segment_2d import Segment2D
+from pyrusgeom.vector_2d import Vector2D
 
 
 class TestSegment2D(TestCase):

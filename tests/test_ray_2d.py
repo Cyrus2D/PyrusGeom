@@ -1,6 +1,6 @@
 from unittest import TestCase
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.ray_2d import Ray2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.ray_2d import Ray2D
 
 
 class TestRay2D(TestCase):

@@ -1,6 +1,6 @@
 import unittest
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
 
 
 class Vector2DTest(unittest.TestCase):

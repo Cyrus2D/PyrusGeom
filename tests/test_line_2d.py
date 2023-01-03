@@ -1,7 +1,7 @@
 from unittest import TestCase
-from PyrusGeom.line_2d import Line2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
+from pyrusgeom.line_2d import Line2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
 
 
 class TestLine2D(TestCase):

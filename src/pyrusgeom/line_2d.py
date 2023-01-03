@@ -5,9 +5,9 @@
 from __future__ import annotations
 import math
 
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
-from PyrusGeom.math_values import EPSILON, ERROR_VALUE
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
+from pyrusgeom.math_values import EPSILON, ERROR_VALUE
 
 
 class Line2D:

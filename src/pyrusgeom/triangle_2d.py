@@ -9,13 +9,13 @@ from __future__ import annotations
 # from typing import Union
 import math
 
-# from PyrusGeom.segment_2d import Segment2D (removed most likely due to a circular import)
-from PyrusGeom.region_2d import Region2D
-from PyrusGeom.ray_2d import Ray2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
-from PyrusGeom.line_2d import Line2D
-from PyrusGeom.math_values import EPSILON
+# from pyrusgeom.segment_2d import Segment2D (removed most likely due to a circular import)
+from pyrusgeom.region_2d import Region2D
+from pyrusgeom.ray_2d import Ray2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
+from pyrusgeom.line_2d import Line2D
+from pyrusgeom.math_values import EPSILON
 
 
 class Triangle2D(Region2D):
@@ -273,7 +273,7 @@ class Triangle2D(Region2D):
         if isinstance(other, Line2D):
             n_sol = 0
             t_sol = [Vector2D(), Vector2D()]
-            from PyrusGeom.segment_2d import Segment2D
+            from pyrusgeom.segment_2d import Segment2D
             t_sol[n_sol] = Segment2D(self._a, self._b).intersection(other)
             if n_sol < 2 and t_sol[n_sol].is_valid():
                 n_sol += 1

@@ -4,13 +4,13 @@
 from __future__ import annotations
 import math
 
-from PyrusGeom.rect_2d import Rect2D
-from PyrusGeom.region_2d import Region2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
-from PyrusGeom.size_2d import Size2D
-from PyrusGeom.line_2d import Line2D
-from PyrusGeom.segment_2d import Segment2D
+from pyrusgeom.rect_2d import Rect2D
+from pyrusgeom.region_2d import Region2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
+from pyrusgeom.size_2d import Size2D
+from pyrusgeom.line_2d import Line2D
+from pyrusgeom.segment_2d import Segment2D
 
 
 class XLessEqual:

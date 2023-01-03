@@ -16,13 +16,13 @@ from __future__ import annotations
 from typing import Union
 import math
 
-from PyrusGeom.size_2d import Size2D
-from PyrusGeom.segment_2d import Segment2D
-from PyrusGeom.region_2d import Region2D
-from PyrusGeom.ray_2d import Ray2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.line_2d import Line2D
-from PyrusGeom.math_values import EPSILON
+from pyrusgeom.size_2d import Size2D
+from pyrusgeom.segment_2d import Segment2D
+from pyrusgeom.region_2d import Region2D
+from pyrusgeom.ray_2d import Ray2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.line_2d import Line2D
+from pyrusgeom.math_values import EPSILON
 
 
 class Rect2D(Region2D):

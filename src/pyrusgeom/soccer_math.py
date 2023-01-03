@@ -6,7 +6,7 @@ from __future__ import annotations
 # from typing import Union
 import math
 
-from PyrusGeom.vector_2d import Vector2D
+from pyrusgeom.vector_2d import Vector2D
 
 EPS = 1.0e-8
 SERVER_EPS = 1.0e-10

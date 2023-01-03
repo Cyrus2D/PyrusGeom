@@ -6,11 +6,11 @@ from enum import Enum, unique, auto
 import functools
 import math
 
-from PyrusGeom.triangle_2d import Triangle2D
-from PyrusGeom.polygon_2d import Polygon2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.segment_2d import Segment2D
-from PyrusGeom.math_values import EPSILON
+from pyrusgeom.triangle_2d import Triangle2D
+from pyrusgeom.polygon_2d import Polygon2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.segment_2d import Segment2D
+from pyrusgeom.math_values import EPSILON
 
 
 @unique

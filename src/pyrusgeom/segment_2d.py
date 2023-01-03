@@ -8,11 +8,11 @@ from __future__ import annotations
 from typing import Union
 import math
 
-from PyrusGeom.triangle_2d import Triangle2D
-from PyrusGeom.line_2d import Line2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
-from PyrusGeom.math_values import CALC_ERROR, EPSILON
+from pyrusgeom.triangle_2d import Triangle2D
+from pyrusgeom.line_2d import Line2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
+from pyrusgeom.math_values import CALC_ERROR, EPSILON
 
 
 class Segment2D:

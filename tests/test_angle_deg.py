@@ -1,8 +1,8 @@
 """ test_angle_deg.py file
-    to test PyrusGeom AngleDeg class
+    to test pyrusgeom AngleDeg class
 """
 from unittest import TestCase
-from PyrusGeom.angle_deg import AngleDeg
+from pyrusgeom.angle_deg import AngleDeg
 
 
 class TestAngleDeg(TestCase):

@@ -13,7 +13,7 @@ pip install PyrusGeom
 or 
 ```sh
 git clone https://github.com/Cyrus2D/PyrusGeom.git
-./setup.py bulid
+./setup.py build
 ./setup.py install
 ```
 
@@ -23,13 +23,13 @@ for importing you can use this options
 
 import the desired class
 ```python
-from PyrusGeom.vector_2d import Vector2D # for Vector2D
-from PyrusGeom.polygon_2d import Polygon2D # for Polygon2D
+from pyrusgeom.vector_2d import Vector2D # for Vector2D
+from pyrusgeom.polygon_2d import Polygon2D # for Polygon2D
 ```
 Or use a Wildcard import like
 ```python
-from PyrusGeom.soccer_math import *
-from PyrusGeom.geom_2d import *
+from pyrusgeom.soccer_math import *
+from pyrusgeom.geom_2d import *
 ```
 
 Examples

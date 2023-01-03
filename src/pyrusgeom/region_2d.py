@@ -2,7 +2,7 @@
     Region2D: class name
     Father Class
 """
-from PyrusGeom.vector_2d import Vector2D
+from pyrusgeom.vector_2d import Vector2D
 
 class Region2D:
     """ handling Regions in SS2D

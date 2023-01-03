@@ -7,10 +7,10 @@ from __future__ import annotations
 import math
 from typing import Union
 
-from PyrusGeom.region_2d import Region2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
-from PyrusGeom.math_values import EPSILON, PI
+from pyrusgeom.region_2d import Region2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
+from pyrusgeom.math_values import EPSILON, PI
 
 
 class Sector2D(Region2D):

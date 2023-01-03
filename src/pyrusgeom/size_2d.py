@@ -6,7 +6,7 @@
 from __future__ import annotations
 import math
 
-from PyrusGeom.math_values import EPSILON
+from pyrusgeom.math_values import EPSILON
 
 class Size2D:
     """ handling size of rectangle in SS2D

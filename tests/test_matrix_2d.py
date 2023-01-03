@@ -1,9 +1,9 @@
 """ test_matrix_2d.py file
-    to test PyrusGeom Matrix2D class
+    to test pyrusgeom Matrix2D class
 """
 from unittest import TestCase
-from PyrusGeom.matrix_2d import Matrix2D
-from PyrusGeom.matrix_2d import Vector2D
+from pyrusgeom.matrix_2d import Matrix2D
+from pyrusgeom.matrix_2d import Vector2D
 
 
 class TestMatrix2D(TestCase):

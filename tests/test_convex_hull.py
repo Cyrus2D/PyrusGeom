@@ -1,11 +1,11 @@
 """ test_convex_hull.py file
-    to test PyrusGeom ConvexHull class
+    to test pyrusgeom ConvexHull class
 """
 from unittest import TestCase
-from PyrusGeom.convex_hull import ConvexHull, MethodType, Polygon2D , \
+from pyrusgeom.convex_hull import ConvexHull, MethodType, Polygon2D , \
     list2set, angle_sort_predicate, is_clockwise
 
-from PyrusGeom.vector_2d import Vector2D
+from pyrusgeom.vector_2d import Vector2D
 
 
 class TestConvexHull(TestCase):

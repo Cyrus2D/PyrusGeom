@@ -1,11 +1,11 @@
 """ test_polygon_2d.py file
-    to test PyrusGeom Polygon2D class
+    to test pyrusgeom Polygon2D class
 """
 from cmath import sqrt
 from unittest import TestCase
-from PyrusGeom.polygon_2d import Polygon2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.rect_2d import Rect2D
+from pyrusgeom.polygon_2d import Polygon2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.rect_2d import Rect2D
 
 class TestPolygon2D(TestCase):
     """Polygon2D class

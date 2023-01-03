@@ -6,10 +6,10 @@ from __future__ import annotations
 from typing import Union
 import math
 
-from PyrusGeom.line_2d import Line2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
-from PyrusGeom.math_values import EPSILON
+from pyrusgeom.line_2d import Line2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
+from pyrusgeom.math_values import EPSILON
 
 
 class Ray2D:

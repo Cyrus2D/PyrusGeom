@@ -5,10 +5,10 @@
 from __future__ import annotations
 from typing import Union
 import math
-from PyrusGeom.math_values import EPSILON
+from pyrusgeom.math_values import EPSILON
 
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
 
 
 class Matrix2D:

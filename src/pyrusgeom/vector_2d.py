@@ -6,8 +6,8 @@ from __future__ import annotations
 from typing import Union
 import math
 
-from PyrusGeom.angle_deg import AngleDeg
-from PyrusGeom.math_values import EPSILON, DEG2RAD
+from pyrusgeom.angle_deg import AngleDeg
+from pyrusgeom.math_values import EPSILON, DEG2RAD
 
 
 class Vector2D:

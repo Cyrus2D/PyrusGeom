@@ -8,12 +8,12 @@ from __future__ import annotations
 from typing import Union
 import math
 
-from PyrusGeom.segment_2d import Segment2D
-from PyrusGeom.ray_2d import Ray2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.line_2d import Line2D
-from PyrusGeom.triangle_2d import Triangle2D
-from PyrusGeom.math_values import PI, EPSILON
+from pyrusgeom.segment_2d import Segment2D
+from pyrusgeom.ray_2d import Ray2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.line_2d import Line2D
+from pyrusgeom.triangle_2d import Triangle2D
+from pyrusgeom.math_values import PI, EPSILON
 
 
 class Circle2D:

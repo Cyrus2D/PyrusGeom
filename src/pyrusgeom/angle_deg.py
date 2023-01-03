@@ -5,7 +5,7 @@
 from __future__ import annotations
 from typing import Union
 import math
-from PyrusGeom.math_values import RAD2DEG,EPSILON,DEG2RAD
+from pyrusgeom.math_values import RAD2DEG,EPSILON,DEG2RAD
 
 class AngleDeg:
     """ handling degrees in SS2D
