@@ -1,3 +1,0 @@
-recursive-include pyrusgeom *.py
-recursive-include tests *.md
-recursive-include tests *.py
