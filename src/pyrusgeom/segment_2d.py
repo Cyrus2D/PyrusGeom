@@ -476,7 +476,6 @@ class Segment2D:
         """
 
         if isinstance(other, Vector2D):
-            other: Vector2D = other
             length = self.length()
             if length == 0.0:
                 return self._origin.dist(other)
@@ -491,7 +490,6 @@ class Segment2D:
                                  self._terminal.dist2(other)))
 
         if isinstance(other, Segment2D):
-            other: Segment2D = other
             if self.exist_intersection(other):
                 return 0.0
             return min(self.dist(other.origin()),

@@ -709,8 +709,6 @@ class Rect2D(Region2D):
                 Ray2D: considered ray line.
                 Segment2D: considered line segment.
 
-        TODO: check this full
-
         Returns:
             list[Vector2D]: intersection Points
         """
@@ -721,18 +719,20 @@ class Rect2D(Region2D):
             right_x = self.right()
             top_y = self.top()
             bottom_y = self.bottom()
-            t_sol[n_sol] = self.left_edge().intersection(other)
+            t_sol[n_sol] = self.left_edge().intersection(other) # n_sol 0
+            if t_sol[n_sol].is_valid() and top_y <= t_sol[n_sol].y() <= bottom_y:
+                n_sol += 1
+            t_sol[n_sol] = self.right_edge().intersection(other) # n_sol 0 1
             if n_sol < 2 and t_sol[n_sol].is_valid() and top_y <= t_sol[n_sol].y() <= bottom_y:
                 n_sol += 1
-            t_sol[n_sol] = self.right_edge().intersection(other)
-            if n_sol < 2 and t_sol[n_sol].is_valid() and top_y <= t_sol[n_sol].y() <= bottom_y:
-                n_sol += 1
-            t_sol[n_sol] = self.top_edge().intersection(other)
-            if n_sol < 2 and (t_sol[n_sol]).is_valid() and left_x <= t_sol[n_sol].x() <= right_x:
-                n_sol += 1
-            t_sol[n_sol] = self.top_edge().intersection(other)
-            if n_sol < 2 and (t_sol[n_sol]).is_valid() and left_x <= t_sol[n_sol].x() <= right_x:
-                n_sol += 1
+            if n_sol < 2:
+                t_sol[n_sol] = self.top_edge().intersection(other) # n_sol 0-1 2
+                if (t_sol[n_sol]).is_valid() and left_x <= t_sol[n_sol].x() <= right_x:
+                    n_sol += 1
+            if n_sol < 2:
+                t_sol[n_sol] = self.bottom_edge().intersection(other) # n_sol 0-2 3
+                if (t_sol[n_sol]).is_valid() and left_x <= t_sol[n_sol].x() <= right_x:
+                    n_sol += 1
             if n_sol == 2 and math.fabs(t_sol[0].x() - t_sol[1].x()) < EPSILON and math.fabs(
                     t_sol[0].y() - t_sol[1].y()) < EPSILON:
                 n_sol = 1
@@ -746,21 +746,19 @@ class Rect2D(Region2D):
         if isinstance(other, Ray2D):
             n_sol = self.intersection(other.line())
 
-            if len(n_sol) > 1 and not other.in_right_dir(n_sol[2], 1.0):
+            if len(n_sol) > 1 and not other.in_right_dir(n_sol[1], 1.0):
                 del n_sol[1]
-
-            if len(n_sol) > 0 and not other.in_right_dir(n_sol[1], 1.0):
-                n_sol[0] = n_sol[1]
-                del n_sol[1]
+            
+            if len(n_sol) > 0 and not other.in_right_dir(n_sol[0], 1.0):
+                del n_sol[0]
             return n_sol
         if isinstance(other, Segment2D):
             n_sol = self.intersection(other.line())
-            if len(n_sol) > 1 and not other.contains(n_sol[2]):
+            if len(n_sol) > 1 and not other.contains(n_sol[1]):
                 del n_sol[1]
 
-            if len(n_sol) > 0 and not other.contains(n_sol[1]):
-                n_sol[0] = n_sol[1]
-                del n_sol[1]
+            if len(n_sol) > 0 and not other.contains(n_sol[0]):
+                del n_sol[0]
             return n_sol
         raise Exception("Input must be Line/Ray/Segment")
 
@@ -865,3 +863,4 @@ class Rect2D(Region2D):
         """
         ostr += f'(rect {round(self.left(), 3)} {round(self.top(), 3)} \
             f{round(self.right(), 3)} {round(self.bottom(), 3)})'
+        return ostr

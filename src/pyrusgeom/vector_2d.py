@@ -542,7 +542,8 @@ class Vector2D:
 
     #  __ operator section __
 
-    __hash__ = None
+    def __hash__(self):
+            return hash((self._x, self._y))
 
     def __eq__(self, other: Vector2D) -> bool:
         return isinstance(other, Vector2D) and self._x == other.x() and self._y == other.y()

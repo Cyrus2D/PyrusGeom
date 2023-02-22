@@ -252,7 +252,7 @@ class ConvexHull:
             point_first:Vector2D = self._input_points[i]
             for j in range(i + 1, point_size):
                 point_second:Vector2D = self._input_points[j]
-                rel = point_second - point_first
+                rel:Vector2D = point_second - point_first
 
                 valid = True
                 last_value = 0.0
@@ -262,7 +262,7 @@ class ConvexHull:
                         continue
 
                     point_third = self._input_points[k]
-                    outer_prod = rel.outerProduct(point_third - point_first)
+                    outer_prod = rel.outer_product(point_third - point_first)
 
                     if math.fabs(outer_prod) < EPSILON:
                         # point is on the line
@@ -272,7 +272,7 @@ class ConvexHull:
                             break
                     # to check if other_prod and last_value don't have a same
                     # sign means one of the points exists in the opposite side
-                    if outer_prod ^ last_value < 0.0:
+                    if outer_prod * last_value < 0.0: # change ^ to *
                         valid = False
                         break
 

@@ -143,12 +143,15 @@ class Polygon2D(Region2D):
 
         """
         super().__init__()
+        self._vertices:list[Vector2D] = []
         if len(args) == 0:
             self._vertices = [Vector2D()]
-        elif len(args[0]) > 0:
+        elif isinstance(args[0], list):
             self._vertices = args[0].copy()
         else:
-            self._vertices = args # TODO:Check this for object init change
+            for item in args:
+                if isinstance(item,Vector2D):
+                    self._vertices.append(item.copy())
 
     def clear(self) -> None:
         """clear all data.

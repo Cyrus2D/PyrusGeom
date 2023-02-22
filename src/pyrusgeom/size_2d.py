@@ -78,7 +78,7 @@ class Size2D:
         """
         return math.sqrt(self._length * self._length + self._width * self._width)
 
-    def is_valid(self) -> float:
+    def is_valid(self) -> bool:
         """check if size is valid or not.
 
         Returns:
