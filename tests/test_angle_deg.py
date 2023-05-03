@@ -12,7 +12,6 @@ class TestAngleDeg(TestCase):
         TestCase (UnitTest): fail if any of tests falis
     """
     def test_degree(self):
-        self.assertEqual(True, False)
         alpha_angle = AngleDeg()
         self.assertEqual(alpha_angle.degree(), 0)
         alpha_angle = AngleDeg(10)
